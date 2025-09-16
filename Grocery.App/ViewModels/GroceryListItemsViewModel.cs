@@ -1,11 +1,15 @@
 ﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Core.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Grocery.App.Views;
 using Grocery.Core.Interfaces.Services;
 using Grocery.Core.Models;
 using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Grocery.App.ViewModels
 {
@@ -84,6 +88,38 @@ namespace Grocery.App.ViewModels
             {
                 await Toast.Make($"Opslaan mislukt: {ex.Message}").Show(cancellationToken);
             }
+        }
+
+        [RelayCommand]
+        public async Task Search(string text)
+        {
+            bool matchFound = false;
+            List<Product> productMatchList = new List<Product>();
+
+            GetAvailableProducts();
+
+            foreach (Product product in AvailableProducts)
+            {
+                if (product.Name.ToLower().Contains(text.ToLower()))
+                {
+                    productMatchList.Add(product);
+                    matchFound = true;
+                }
+            }
+
+            if (matchFound)
+            {
+                AvailableProducts.Clear();
+                foreach (Product product in productMatchList)
+                {
+                    AvailableProducts.Add(product);
+                }
+            }
+            else if (text != string.Empty && !matchFound)
+            {
+                Shell.Current.DisplayAlert("Onbekend product", "Product staat niet in de lijst!", "OK");
+            }
+
         }
 
     }
