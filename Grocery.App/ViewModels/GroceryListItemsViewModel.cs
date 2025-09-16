@@ -91,7 +91,7 @@ namespace Grocery.App.ViewModels
         }
 
         [RelayCommand]
-        public async Task Search(string text)
+        public void Search(string text)
         {
             bool matchFound = false;
             List<Product> productMatchList = new List<Product>();
