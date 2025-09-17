@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using Grocery.App.Views;
 using Grocery.Core.Interfaces.Services;
 using Grocery.Core.Models;
+using Microsoft.Maui.Controls;
 using System.Diagnostics;
 
 namespace Grocery.App.ViewModels
@@ -23,7 +24,7 @@ namespace Grocery.App.ViewModels
         private string loginMessage;
 
         public LoginViewModel(IAuthService authService, GlobalViewModel global)
-        { //_authService = App.Services.GetServices<IAuthService>().FirstOrDefault();
+        { //_authService = App.GetServices<IAuthService>().FirstOrDefault();
             _authService = authService;
             _global = global;
         }
@@ -47,9 +48,8 @@ namespace Grocery.App.ViewModels
         [RelayCommand]
         private void AccountAanmaken()
         {
-            Debug.WriteLine("Account aanmaken geopend!");
             RegistratieViewModel registratieViewModel = new RegistratieViewModel();
-            Application.Current.MainPage = new NavigationPage(new RegistratieView(registratieViewModel));
+            Application.Current.MainPage.Navigation.PushModalAsync(new RegistratieView(registratieViewModel));
         }
     }
 }
