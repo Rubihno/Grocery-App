@@ -1,8 +1,10 @@
 ﻿
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Grocery.App.Views;
 using Grocery.Core.Interfaces.Services;
 using Grocery.Core.Models;
+using System.Diagnostics;
 
 namespace Grocery.App.ViewModels
 {
@@ -40,6 +42,14 @@ namespace Grocery.App.ViewModels
             {
                 LoginMessage = "Ongeldige inloggegevens.";
             }
+        }
+
+        [RelayCommand]
+        private void AccountAanmaken()
+        {
+            Debug.WriteLine("Account aanmaken geopend!");
+            RegistratieViewModel registratieViewModel = new RegistratieViewModel();
+            Application.Current.MainPage = new NavigationPage(new RegistratieView(registratieViewModel));
         }
     }
 }

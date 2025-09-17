@@ -11,5 +11,6 @@
         <Entry Placeholder="Password" Text="{Binding Password}" IsPassword="True" />
         <Button Text="Login" Command="{Binding LoginCommand}" />
         <Label Text="{Binding LoginMessage}" TextColor="Red" />
+        <Button Text="Account aanmaken" Command="{Binding AccountAanmakenCommand}" />
     </StackLayout>
 </ContentPage>

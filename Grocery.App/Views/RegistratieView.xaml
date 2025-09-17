@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Grocery.App.ViewModels"
+             x:Class="Grocery.App.Views.RegistratieView"
+             x:DataType="vm:RegistratieViewModel">
+    <StackLayout Padding="20" VerticalOptions="Center">
+        <Label Text="Account Aanmaken" FontSize="24" HorizontalOptions="Center"/>
+        <Entry Placeholder="Emailadres" HorizontalOptions="Fill" Keyboard="Email"/>
+        <Entry Placeholder="Gebruikersnaam" HorizontalOptions="Fill" Keyboard="Text"/>
+        <Entry Placeholder="Wachtwoord" HorizontalOptions="Fill"/>
+        <Entry Placeholder="Wachtwoord bevestiging" HorizontalOptions="Fill"/>
+        <Button Text="Registreren" HorizontalOptions="Fill"/>
+        <Label/>
+        <Button Text="Annuleren" HorizontalOptions="Fill"/>
+    </StackLayout>
+</ContentPage>
