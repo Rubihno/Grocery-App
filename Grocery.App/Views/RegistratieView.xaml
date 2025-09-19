@@ -6,12 +6,15 @@
              x:DataType="vm:RegistratieViewModel">
     <StackLayout Padding="20" VerticalOptions="Center">
         <Label Text="Account Aanmaken" FontSize="24" HorizontalOptions="Center"/>
-        <Entry x:Name="Emailadres" Placeholder="Emailadres" HorizontalOptions="Fill" Keyboard="Email"/>
-        <Entry Placeholder="Gebruikersnaam" HorizontalOptions="Fill" Keyboard="Text"/>
-        <Entry Placeholder="Wachtwoord" HorizontalOptions="Fill"/>
-        <Entry Placeholder="Wachtwoord bevestiging" HorizontalOptions="Fill"/>
+        <Entry Text="{Binding EmailAdres}" Placeholder="Emailadres" HorizontalOptions="Fill" Keyboard="Email"/>
+        <Label Text="{Binding EmailValidatieFailMessage}" TextColor="Red"/>
+        <Entry Text="{Binding Gebruikersnaam}" Placeholder="Gebruikersnaam" HorizontalOptions="Fill" Keyboard="Text"/>
+        <Label Text="{Binding GebruikersnaamValidatieFailMessage}" TextColor="Red"/>
+        <Entry Text="{Binding Wachtwoord}" Placeholder="Wachtwoord" HorizontalOptions="Fill"/>
+        <Entry Text="{Binding WachtwoordBevestiging}" Placeholder="Wachtwoord bevestiging" HorizontalOptions="Fill"/>
+        <Label Text="{Binding WachtwoordtValidatieFailMessage}" TextColor="Red"/>
         <Button Text="Registreren" HorizontalOptions="Fill" Command="{Binding RegistratieCommand}"/>
-        <Label/>
+        <Label Text="{Binding VeldenLeegMessage}" TextColor="Red"/>
         <Button Text="Annuleren" HorizontalOptions="Fill" Command="{Binding AnnulerenCommand}"/>
     </StackLayout>
 </ContentPage>
