@@ -2,6 +2,8 @@
 using CommunityToolkit.Mvvm.Input;
 using Grocery.App.Views;
 using Grocery.Core.Data.Repositories;
+using Grocery.Core.Helpers;
+using Grocery.Core.Interfaces.Repositories;
 using Grocery.Core.Interfaces.Services;
 using Grocery.Core.Models;
 using System.Diagnostics;
@@ -11,8 +13,12 @@ namespace Grocery.App.ViewModels
 {
     public partial class RegistratieViewModel : BaseViewModel
     {
-        readonly ClientRepository clientRepository = new ClientRepository();
-        
+        private readonly IClientRepository _clientRepository;
+        public RegistratieViewModel(IClientRepository clientRepository)
+        {
+            _clientRepository = clientRepository;
+        }
+
         public string EmailAdres { get; set; }
         public string Gebruikersnaam { get; set; }
         public string Wachtwoord { get; set; }
@@ -74,14 +80,17 @@ namespace Grocery.App.ViewModels
         private void AddNieuwAccountToClientList(List<Client> clientList)
         {
             int id = clientList.Count() + 1;
-            Client client = new Client(id, Gebruikersnaam, EmailAdres, Wachtwoord);
-            clientRepository.AddClient(client);
+            string hashWachtwoord = PasswordHelper.HashPassword(Wachtwoord);
+
+            Client client = new Client(id, Gebruikersnaam, EmailAdres, hashWachtwoord);
+
+            _clientRepository.AddClient(client);
         }
 
         [RelayCommand]
         private async Task Registratie()
         {
-            List<Client> clientList = clientRepository.GetAll();
+            List<Client> clientList = _clientRepository.GetAll();
             bool[] validatieChecks = new bool[3];
 
             if (EmailAdres == null || Gebruikersnaam == null || Wachtwoord == null || WachtwoordBevestiging == null)

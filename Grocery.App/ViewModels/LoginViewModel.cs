@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Grocery.App.Views;
+using Grocery.Core.Interfaces.Repositories;
 using Grocery.Core.Interfaces.Services;
 using Grocery.Core.Models;
 using Microsoft.Maui.Controls;
@@ -13,6 +14,7 @@ namespace Grocery.App.ViewModels
     {
         private readonly IAuthService _authService;
         private readonly GlobalViewModel _global;
+        private readonly IClientRepository _clientRepository;
 
         [ObservableProperty]
         private string email = "user3@mail.com";
@@ -23,10 +25,11 @@ namespace Grocery.App.ViewModels
         [ObservableProperty]
         private string loginMessage;
 
-        public LoginViewModel(IAuthService authService, GlobalViewModel global)
+        public LoginViewModel(IAuthService authService, GlobalViewModel global, IClientRepository clientRepository)
         { //_authService = App.GetServices<IAuthService>().FirstOrDefault();
             _authService = authService;
             _global = global;
+            _clientRepository = clientRepository;
         }
 
         [RelayCommand]
@@ -48,7 +51,7 @@ namespace Grocery.App.ViewModels
         [RelayCommand]
         private void AccountAanmaken()
         {
-            RegistratieViewModel registratieViewModel = new RegistratieViewModel();
+            RegistratieViewModel registratieViewModel = new RegistratieViewModel(_clientRepository);
             Application.Current.MainPage.Navigation.PushModalAsync(new RegistratieView(registratieViewModel));
         }
     }
