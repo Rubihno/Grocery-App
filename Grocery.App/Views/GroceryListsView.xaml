@@ -7,7 +7,7 @@
              Title="GroceryListsView">
     <Shell.TitleView>
         <Grid>
-            <Label Text="Boodschappenlijsten" FontSize="Large" HorizontalOptions="Center" VerticalOptions="Center" />
+            <Label Text="{Binding Title}" FontSize="Large" HorizontalOptions="Center" VerticalOptions="Center" />
         </Grid>
     </Shell.TitleView>
 

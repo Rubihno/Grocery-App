@@ -37,16 +37,20 @@ namespace Grocery.App.ViewModels
         private string veldenLeegMessage;
 
         [RelayCommand]
-        private void Annuleren()
+        private async void Annuleren()
         {
-            Application.Current.MainPage?.Navigation.PopModalAsync();
+            bool annuleren = await Application.Current.MainPage?.DisplayAlert("Registratie annuleren?", string.Empty, "Ja", "Nee");
+            if (annuleren)
+            {
+                Application.Current.MainPage?.Navigation.PopModalAsync();
+            }
         }
 
         private bool EmailValidatie(string email)
         {
             if (email.Contains('@'))
             {
-                // Failmessage blijft nu niet staan wanneer er een 
+                // Failmessage wordt nu niet weergegeven bij een 2e poging waar email correct is en een ander veld niet
                 EmailValidatieFailMessage = string.Empty;
                 return true;
             }
@@ -79,7 +83,7 @@ namespace Grocery.App.ViewModels
 
         private void AddNieuwAccountToClientList(List<Client> clientList)
         {
-            int id = clientList.Count() + 1;
+            int id = clientList.Count + 1;
             string hashWachtwoord = PasswordHelper.HashPassword(Wachtwoord);
 
             Client client = new Client(id, Gebruikersnaam, EmailAdres, hashWachtwoord);
@@ -109,7 +113,7 @@ namespace Grocery.App.ViewModels
 
                     Application.Current.MainPage?.Navigation.PopModalAsync();
 
-                    Application.Current.MainPage.DisplayAlert("Account aangemaakt", "U kunt nu inloggen met uw account", "OK");
+                    Application.Current.MainPage?.DisplayAlert("Account aangemaakt", "U kunt nu inloggen met uw account", "OK");
                 }
             }
         }
