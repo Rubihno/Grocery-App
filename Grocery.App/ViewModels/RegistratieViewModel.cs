@@ -5,6 +5,7 @@ using Grocery.Core.Data.Repositories;
 using Grocery.Core.Interfaces.Services;
 using Grocery.Core.Models;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Grocery.App.ViewModels
 {
@@ -24,7 +25,7 @@ namespace Grocery.App.ViewModels
         private string gebruikersnaamValidatieFailMessage;
 
         [ObservableProperty]
-        private string wachtwoordtValidatieFailMessage;
+        private string wachtwoordValidatieFailMessage;
 
         [ObservableProperty]
         private string veldenLeegMessage;
@@ -37,22 +38,36 @@ namespace Grocery.App.ViewModels
 
         private bool EmailValidatie(string email)
         {
-            if (email.Contains('@')) return true;
-
+            if (email.Contains('@'))
+            {
+                // Failmessage blijft nu niet staan wanneer er een 
+                EmailValidatieFailMessage = string.Empty;
+                return true;
+            }
+            EmailValidatieFailMessage = "Geen geldig e-mailadres ingevuld!";
             return false;
         }
         private bool GebruikersnaamValidatie(string gebruikersnaam, List<Client> clientList)
         {
             foreach (Client client in clientList)
             {
-                if (client.Name == gebruikersnaam) return false;
+                if (client.Name == gebruikersnaam)
+                {
+                    GebruikersnaamValidatieFailMessage = "Gebruikersnaam bestaat al!";
+                    return false;
+                }
             }
+            GebruikersnaamValidatieFailMessage = string.Empty;
             return true;
         }
         private bool WachtwoordValidatie(string wachtwoord, string wachtwoordBevestiging)
         {
-            if (wachtwoord == wachtwoordBevestiging) return true;
-
+            if (wachtwoord == wachtwoordBevestiging)
+            {
+                WachtwoordValidatieFailMessage = string.Empty;
+                return true;
+            }
+            WachtwoordValidatieFailMessage = "Wachtwoorden zijn niet hetzelfde!";
             return false;
         }
 
@@ -64,26 +79,28 @@ namespace Grocery.App.ViewModels
         }
 
         [RelayCommand]
-        private void Registratie()
+        private async Task Registratie()
         {
             List<Client> clientList = clientRepository.GetAll();
             bool[] validatieChecks = new bool[3];
 
-            if (EmailAdres == string.Empty || Gebruikersnaam == string.Empty || Wachtwoord == string.Empty || WachtwoordBevestiging == string.Empty)
+            if (EmailAdres == null || Gebruikersnaam == null || Wachtwoord == null || WachtwoordBevestiging == null)
             {
-                Debug.WriteLine("1 of meerdere velden zijn leeg!");
+                VeldenLeegMessage = "1 of meerdere velden zijn leeg!";
             }
             else
             {
+                bool accountToevoegen = false;
+
                 validatieChecks = [EmailValidatie(EmailAdres), GebruikersnaamValidatie(Gebruikersnaam, clientList), WachtwoordValidatie(Wachtwoord, WachtwoordBevestiging)];
 
                 if (validatieChecks.All(check => check))
                 {
                     AddNieuwAccountToClientList(clientList);
 
-                    // Terug naar loginscherm
+                    Application.Current.MainPage?.Navigation.PopModalAsync();
 
-                    // Melding dat account is aangemaakt
+                    Application.Current.MainPage.DisplayAlert("Account aangemaakt", "U kunt nu inloggen met uw account", "OK");
                 }
             }
         }

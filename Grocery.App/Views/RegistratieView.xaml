@@ -12,7 +12,7 @@
         <Label Text="{Binding GebruikersnaamValidatieFailMessage}" TextColor="Red"/>
         <Entry Text="{Binding Wachtwoord}" Placeholder="Wachtwoord" HorizontalOptions="Fill"/>
         <Entry Text="{Binding WachtwoordBevestiging}" Placeholder="Wachtwoord bevestiging" HorizontalOptions="Fill"/>
-        <Label Text="{Binding WachtwoordtValidatieFailMessage}" TextColor="Red"/>
+        <Label Text="{Binding WachtwoordValidatieFailMessage}" TextColor="Red"/>
         <Button Text="Registreren" HorizontalOptions="Fill" Command="{Binding RegistratieCommand}"/>
         <Label Text="{Binding VeldenLeegMessage}" TextColor="Red"/>
         <Button Text="Annuleren" HorizontalOptions="Fill" Command="{Binding AnnulerenCommand}"/>
