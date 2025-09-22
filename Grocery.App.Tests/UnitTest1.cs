@@ -24,6 +24,28 @@ namespace Grocery.App.Tests
     [TestFixture]
     public class LegeVeldenTests : BaseViewModelTests
     {
+        [Test]
+        public void RegistratieLegeVelden_GeenLegeVelden_ReturnTrue()
+        {
+            string email = "ruben@mail.com";
+            string gebruikersnaam = "Ruben";
+            string wachtwoord = "wachtwoord123";
+            string wachtwoordBevestiging = "wachtwoord123";
+
+            bool veldenVol;
+
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(gebruikersnaam) || string.IsNullOrEmpty(wachtwoord) || string.IsNullOrEmpty(wachtwoordBevestiging))
+            {
+                veldenVol = false;
+            }
+            else
+            {
+                veldenVol = true;
+            }
+
+            Assert.IsTrue(veldenVol);
+        }
+
         [TestCase ("", "Ruben", "wachtwoord123", "wachtwoord123")]
         [TestCase("", "", "", "")]
         public void RegistratieLegeVelden_LegeVeldenMessage_ReturnMessageString(string email, string gebruikersnaam, string wachtwoord, string wachtwoordBevestiging)
