@@ -6,7 +6,9 @@ using Grocery.Core.Helpers;
 using Grocery.Core.Interfaces.Repositories;
 using Grocery.Core.Interfaces.Services;
 using Grocery.Core.Models;
+using Microsoft.Maui.ApplicationModel.Communication;
 using System.Diagnostics;
+using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace Grocery.App.ViewModels
@@ -49,22 +51,25 @@ namespace Grocery.App.ViewModels
             }
         }
 
-        private bool EmailValidatie(string email)
+        public bool EmailValidatie(string email)
         {
-            if (email.Contains('@'))
+            try
             {
-                // Failmessage wordt nu niet weergegeven bij een 2e poging waar email correct is en een ander veld niet
+                MailAddress mail = new MailAddress(email);
                 EmailValidatieFailMessage = string.Empty;
                 return true;
             }
-            EmailValidatieFailMessage = "Geen geldig e-mailadres ingevuld!";
-            return false;
+            catch (Exception e)
+            {
+                EmailValidatieFailMessage = "Geen geldig e-mailadres ingevuld!";
+                return false;
+            }
         }
-        private bool GebruikersnaamValidatie(string gebruikersnaam, List<Client> clientList)
+        public bool GebruikersnaamValidatie(string gebruikersnaam, List<Client> clientList)
         {
             if (gebruikersnaam.Length < 5)
             {
-                gebruikersnaamValidatieFailMessage = "Gebruikersnaam bevat minder dan 5 karakters!";
+                GebruikersnaamValidatieFailMessage = "Gebruikersnaam bevat minder dan 5 karakters!";
                 return false;
             }
 
@@ -80,7 +85,7 @@ namespace Grocery.App.ViewModels
             GebruikersnaamValidatieFailMessage = string.Empty;
             return true;
         }
-        private bool WachtwoordValidatie(string wachtwoord, string wachtwoordBevestiging)
+        public bool WachtwoordValidatie(string wachtwoord, string wachtwoordBevestiging)
         {
             if (wachtwoord == wachtwoordBevestiging)
             {
@@ -112,12 +117,13 @@ namespace Grocery.App.ViewModels
             List<Client> clientList = _clientRepository.GetAll();
             bool[] validatieChecks = new bool[3];
 
-            if (EmailAdres == null || Gebruikersnaam == null || Wachtwoord == null || WachtwoordBevestiging == null)
+            if (string.IsNullOrEmpty(EmailAdres) || string.IsNullOrEmpty(Gebruikersnaam) || string.IsNullOrEmpty(Wachtwoord) || string.IsNullOrEmpty(WachtwoordBevestiging))
             {
                 VeldenLeegMessage = "1 of meerdere velden zijn leeg!";
             }
             else
             {
+                VeldenLeegMessage = string.Empty;
                 bool accountToevoegen = false;
 
                 validatieChecks = [EmailValidatie(EmailAdres), GebruikersnaamValidatie(Gebruikersnaam, clientList), WachtwoordValidatie(Wachtwoord, WachtwoordBevestiging)];
