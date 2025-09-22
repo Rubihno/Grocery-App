@@ -25,6 +25,9 @@ namespace Grocery.App.ViewModels
         public string WachtwoordBevestiging { get; set; }
 
         [ObservableProperty]
+        public bool isPassword = true;
+
+        [ObservableProperty]
         private string emailValidatieFailMessage;
 
         [ObservableProperty]
@@ -59,6 +62,12 @@ namespace Grocery.App.ViewModels
         }
         private bool GebruikersnaamValidatie(string gebruikersnaam, List<Client> clientList)
         {
+            if (gebruikersnaam.Length < 5)
+            {
+                gebruikersnaamValidatieFailMessage = "Gebruikersnaam bevat minder dan 5 karakters!";
+                return false;
+            }
+
             foreach (Client client in clientList)
             {
                 if (client.Name == gebruikersnaam)
@@ -67,6 +76,7 @@ namespace Grocery.App.ViewModels
                     return false;
                 }
             }
+
             GebruikersnaamValidatieFailMessage = string.Empty;
             return true;
         }
@@ -74,6 +84,11 @@ namespace Grocery.App.ViewModels
         {
             if (wachtwoord == wachtwoordBevestiging)
             {
+                if (wachtwoord.Length < 8)
+                {
+                    WachtwoordValidatieFailMessage = "Wachtwoord bevat minder dan 8 karakters!";
+                    return false;
+                }
                 WachtwoordValidatieFailMessage = string.Empty;
                 return true;
             }

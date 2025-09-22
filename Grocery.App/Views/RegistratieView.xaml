@@ -8,10 +8,14 @@
         <Label Text="Account Aanmaken" FontSize="24" HorizontalOptions="Center"/>
         <Entry Text="{Binding EmailAdres}" Placeholder="Emailadres" HorizontalOptions="Fill" Keyboard="Email"/>
         <Label Text="{Binding EmailValidatieFailMessage}" TextColor="Red"/>
-        <Entry Text="{Binding Gebruikersnaam}" Placeholder="Gebruikersnaam" HorizontalOptions="Fill" Keyboard="Text"/>
+        <Entry Text="{Binding Gebruikersnaam}" Placeholder="Gebruikersnaam" HorizontalOptions="Fill" Keyboard="Text" MaxLength="20"/>
         <Label Text="{Binding GebruikersnaamValidatieFailMessage}" TextColor="Red"/>
-        <Entry Text="{Binding Wachtwoord}" Placeholder="Wachtwoord" HorizontalOptions="Fill"/>
-        <Entry Text="{Binding WachtwoordBevestiging}" Placeholder="Wachtwoord bevestiging" HorizontalOptions="Fill"/>
+        <Entry Text="{Binding Wachtwoord}" Placeholder="Wachtwoord" HorizontalOptions="Fill" IsPassword="{Binding IsPassword}"/>
+        <Entry Text="{Binding WachtwoordBevestiging}" Placeholder="Wachtwoord bevestiging" HorizontalOptions="Fill" IsPassword="{Binding IsPassword}"/>
+        <HorizontalStackLayout>
+            <CheckBox CheckedChanged="OnCheckBoxChanged" HorizontalOptions="Center" VerticalOptions="Center"/>
+            <Label Text="Wachtwoord weergeven" HorizontalOptions="Center" VerticalOptions="Center"/>
+        </HorizontalStackLayout>
         <Label Text="{Binding WachtwoordValidatieFailMessage}" TextColor="Red"/>
         <Button Text="Registreren" HorizontalOptions="Fill" Command="{Binding RegistratieCommand}"/>
         <Label Text="{Binding VeldenLeegMessage}" TextColor="Red"/>

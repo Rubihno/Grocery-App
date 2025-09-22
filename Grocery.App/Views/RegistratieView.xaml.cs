@@ -10,4 +10,12 @@ public partial class RegistratieView : ContentPage
 		InitializeComponent();
 		BindingContext = viewModel;
 	}
+
+    void OnCheckBoxChanged(object sender, CheckedChangedEventArgs e)
+    {
+        if (BindingContext is RegistratieViewModel viewModel)
+        {
+            viewModel.IsPassword = !viewModel.IsPassword;
+        }
+    }
 }
