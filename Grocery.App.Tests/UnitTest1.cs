@@ -110,7 +110,6 @@ namespace Grocery.App.Tests
         }
 
         [Test]
-        // Returns false als de gebruikersnaam al bestaat
         public void GebruikersnaamValidatie_BestaandeGebruikersnaam_ReturnFalse()
         {
             string gebruikersnaam = "A.J. Kwak";
