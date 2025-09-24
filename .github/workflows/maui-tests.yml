@@ -27,8 +27,16 @@ jobs:
       - name: Herstel afhankelijkheden
         run: dotnet restore
  
-      - name: Bouw de applicatie
-        run: dotnet build --configuration Release -f net8.0-windows10.0.19041.0 /p:RuntimeIdentifierOverride=win-x64
+      - name: Bouw Grocery.App
+        run: dotnet build Grocery.App --configuration Release -f net8.0-windows10.0.19041.0 /p:RuntimeIdentifierOverride=win-x64
+
+      - name: Bouw Core Projects
+        run: |
+         dotnet build Grocery.Core --configuration Release -f net8.0
+         dotnet build Grocery.Core.Data --configuration Release -f net8.0
+
+      - name: Bouw Test Project
+        run: dotnet build Grocert.App.Tests --configuration Release -f net8.0
  
       - name: Voer unit tests uit
-        run: dotnet test --configuration Release --no-restore --no-build --verbosity normal --framework net8.0-windows10.0.19041.0
+        run: dotnet test --configuration Release --no-restore --no-build --verbosity normal
