@@ -58,14 +58,10 @@ dlldata.c
 # Benchmark Results
 BenchmarkDotNet.Artifacts/
 
-# .NET Core, MAUI
-package-lock.json
+# .NET Core
 project.lock.json
 project.fragment.lock.json
 artifacts/
-platforms/
-!platforms/Windows
-AppPackages/
 
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt
