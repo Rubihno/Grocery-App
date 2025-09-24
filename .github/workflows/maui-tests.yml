@@ -36,7 +36,7 @@ jobs:
          dotnet build Grocery.Core.Data --configuration Release -f net8.0
 
       - name: Bouw Test Project
-        run: dotnet build Grocert.App.Tests --configuration Release -f net8.0
+        run: dotnet build Grocery.App.Tests --configuration Release -f net8.0
  
       - name: Voer unit tests uit
         run: dotnet test --configuration Release --no-restore --no-build --verbosity normal
