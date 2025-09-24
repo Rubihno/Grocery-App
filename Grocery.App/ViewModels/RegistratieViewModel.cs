@@ -73,11 +73,11 @@ namespace Grocery.App.ViewModels
 
             if (veldenLeeg)
             {
-                VeldenLeegMessage = "1 of meerdere velden zijn leeg!";
+                VeldenLeegMessage = _validatieService.veldenLeegMessage;
             }
             else
             {
-                VeldenLeegMessage = string.Empty;
+                VeldenLeegMessage = _validatieService.veldenLeegMessage;
 
                 bool emailResult = _validatieService.EmailValidatie(EmailAdres);
                 EmailValidatieFailMessage = _validatieService.EmailFailMessage;
