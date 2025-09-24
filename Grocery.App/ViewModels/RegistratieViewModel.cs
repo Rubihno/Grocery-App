@@ -17,10 +17,12 @@ namespace Grocery.App.ViewModels
     {
         private readonly IClientRepository _clientRepository;
         private readonly IValidatieService _validatieService;
-        public RegistratieViewModel(IClientRepository clientRepository, IValidatieService validatieService)
+        private readonly IClientService _clientService;
+        public RegistratieViewModel(IClientRepository clientRepository, IValidatieService validatieService, IClientService clientService)
         {
             _clientRepository = clientRepository;
             _validatieService = validatieService;
+            _clientService = clientService;
         }
 
         public string EmailAdres { get; set; }
@@ -53,20 +55,11 @@ namespace Grocery.App.ViewModels
             }
         }
 
-        private void AddNieuwAccountToClientList(List<Client> clientList)
-        {
-            int id = clientList.Count + 1;
-            string hashWachtwoord = PasswordHelper.HashPassword(Wachtwoord);
-
-            Client client = new Client(id, Gebruikersnaam, EmailAdres, hashWachtwoord);
-
-            _clientRepository.AddClient(client);
-        }
-
         [RelayCommand]
         private async Task Registratie()
         {
             List<Client> clientList = _clientRepository.GetAll();
+            int id = clientList.Count + 1;
             bool[] validatieChecks = new bool[3];
 
             bool veldenLeeg = _validatieService.LegeVeldenValidatie(EmailAdres, Gebruikersnaam, Wachtwoord, WachtwoordBevestiging);
@@ -92,7 +85,8 @@ namespace Grocery.App.ViewModels
 
                 if (validatieChecks.All(check => check))
                 {
-                    AddNieuwAccountToClientList(clientList);
+                    
+                    _clientService.AddNieuwAccountToClientList(id, Gebruikersnaam, EmailAdres, Wachtwoord);
 
                     Application.Current.MainPage?.Navigation.PopModalAsync();
 
