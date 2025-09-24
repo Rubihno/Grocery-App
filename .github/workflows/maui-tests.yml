@@ -15,6 +15,17 @@ jobs:
     steps:
       - name: Haal de repository op
         uses: actions/checkout@v4
+
+      - name: Cache Files
+        uses: actions/cache@v4.3.0
+        with:
+          # A list of files, directories, and wildcard patterns to cache and restore
+          path: |
+           ~/.nuget/packages
+           ~/.dotnet/workloads
+           ~/.dotnet/tools
+          key: ${{ runner.os }}-dotnet-${{ hashFiles('**/*.csproj', '**/global.json') }}
+          restore-keys: ${{ runner.os }}-dotnet-
  
       - name: Installeer .NET SDK
         uses: actions/setup-dotnet@v3
@@ -22,14 +33,11 @@ jobs:
           dotnet-version: '8.0.x'  # Gebruik de juiste versie voor MAUI
  
       - name: Installeer MAUI workloads
-        run: dotnet workload install maui
+        run: dotnet workload install maui-windows # Ik build alleen voor windows, door maui-windows alleen te installeren verlaagt dit workflow time
  
       - name: Herstel afhankelijkheden
         run: dotnet restore
- 
-      - name: Bouw Grocery.App
-        run: dotnet build Grocery.App --configuration Release -f net8.0-windows10.0.19041.0 /p:RuntimeIdentifierOverride=win-x64
-
+        
       - name: Bouw Core Projects
         run: |
          dotnet build Grocery.Core --configuration Release -f net8.0
@@ -37,6 +45,9 @@ jobs:
 
       - name: Bouw Test Project
         run: dotnet build Grocery.App.Tests --configuration Release -f net8.0
+ 
+      - name: Bouw Grocery.App
+        run: dotnet build Grocery.App --configuration Release -f net8.0-windows10.0.19041.0 /p:RuntimeIdentifierOverride=win-x64
  
       - name: Voer unit tests uit
         run: dotnet test --configuration Release --no-restore --no-build --verbosity normal
