@@ -6,6 +6,7 @@ using Moq;
 
 namespace TestCore
 {
+    [TestFixture]
     public class RegistratieKlantAccountTests
     {
         public Mock<IClientRepository> _mockClientRepository;

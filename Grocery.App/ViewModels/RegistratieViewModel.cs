@@ -16,9 +16,11 @@ namespace Grocery.App.ViewModels
     public partial class RegistratieViewModel : BaseViewModel
     {
         private readonly IClientRepository _clientRepository;
-        public RegistratieViewModel(IClientRepository clientRepository)
+        private readonly IValidatieService _validatieService;
+        public RegistratieViewModel(IClientRepository clientRepository, IValidatieService validatieService)
         {
             _clientRepository = clientRepository;
+            _validatieService = validatieService;
         }
 
         public string EmailAdres { get; set; }
@@ -51,56 +53,6 @@ namespace Grocery.App.ViewModels
             }
         }
 
-        public bool EmailValidatie(string email)
-        {
-            try
-            {
-                MailAddress mail = new MailAddress(email);
-                EmailValidatieFailMessage = string.Empty;
-                return true;
-            }
-            catch (Exception e)
-            {
-                EmailValidatieFailMessage = "Geen geldig e-mailadres ingevuld!";
-                return false;
-            }
-        }
-        public bool GebruikersnaamValidatie(string gebruikersnaam, List<Client> clientList)
-        {
-            if (gebruikersnaam.Length < 5)
-            {
-                GebruikersnaamValidatieFailMessage = "Gebruikersnaam bevat minder dan 5 karakters!";
-                return false;
-            }
-
-            foreach (Client client in clientList)
-            {
-                if (client.Name == gebruikersnaam)
-                {
-                    GebruikersnaamValidatieFailMessage = "Gebruikersnaam bestaat al!";
-                    return false;
-                }
-            }
-
-            GebruikersnaamValidatieFailMessage = string.Empty;
-            return true;
-        }
-        public bool WachtwoordValidatie(string wachtwoord, string wachtwoordBevestiging)
-        {
-            if (wachtwoord == wachtwoordBevestiging)
-            {
-                if (wachtwoord.Length < 8)
-                {
-                    WachtwoordValidatieFailMessage = "Wachtwoord bevat minder dan 8 karakters!";
-                    return false;
-                }
-                WachtwoordValidatieFailMessage = string.Empty;
-                return true;
-            }
-            WachtwoordValidatieFailMessage = "Wachtwoorden zijn niet hetzelfde!";
-            return false;
-        }
-
         private void AddNieuwAccountToClientList(List<Client> clientList)
         {
             int id = clientList.Count + 1;
@@ -117,16 +69,26 @@ namespace Grocery.App.ViewModels
             List<Client> clientList = _clientRepository.GetAll();
             bool[] validatieChecks = new bool[3];
 
-            if (string.IsNullOrEmpty(EmailAdres) || string.IsNullOrEmpty(Gebruikersnaam) || string.IsNullOrEmpty(Wachtwoord) || string.IsNullOrEmpty(WachtwoordBevestiging))
+            bool veldenLeeg = _validatieService.LegeVeldenValidatie(EmailAdres, Gebruikersnaam, Wachtwoord, WachtwoordBevestiging);
+
+            if (veldenLeeg)
             {
                 VeldenLeegMessage = "1 of meerdere velden zijn leeg!";
             }
             else
             {
                 VeldenLeegMessage = string.Empty;
-                bool accountToevoegen = false;
 
-                validatieChecks = [EmailValidatie(EmailAdres), GebruikersnaamValidatie(Gebruikersnaam, clientList), WachtwoordValidatie(Wachtwoord, WachtwoordBevestiging)];
+                bool emailResult = _validatieService.EmailValidatie(EmailAdres);
+                EmailValidatieFailMessage = _validatieService.EmailFailMessage;
+
+                bool gebruikersnaamResult = _validatieService.GebruikersnaamValidatie(Gebruikersnaam, clientList);
+                GebruikersnaamValidatieFailMessage = _validatieService.GebruikersnaamFailMessage;
+
+                bool wachtwoordResult = _validatieService.WachtwoordValidatie(Wachtwoord, WachtwoordBevestiging);
+                WachtwoordValidatieFailMessage = _validatieService.WachtwoordFailMessage;
+
+                validatieChecks = [emailResult, gebruikersnaamResult, wachtwoordResult];
 
                 if (validatieChecks.All(check => check))
                 {
