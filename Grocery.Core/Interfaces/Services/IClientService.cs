@@ -9,5 +9,7 @@ namespace Grocery.Core.Interfaces.Services
         public Client? Get(int id);
 
         public List<Client> GetAll();
+
+        public void AddNieuwAccountToClientList(int id, string gebruikersnaam, string email, string wachtwoord);
     }
 }

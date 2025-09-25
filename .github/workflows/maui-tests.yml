@@ -15,20 +15,50 @@ jobs:
     steps:
       - name: Haal de repository op
         uses: actions/checkout@v4
- 
-      - name: Installeer .NET SDK
+
+      - name: Cache .NET SDK and MAUI workloads
+        uses: actions/cache@v3
+        with:
+          path: |
+            C:\Users\runneradmin\.dotnet\packs
+            C:\Users\runneradmin\.dotnet\workloads
+            C:\Users\runneradmin\.dotnet\metadata\workloads
+            C:\Users\runneradmin\.dotnet\sdk
+            C:\Users\runneradmin\.dotnet\shared
+            C:\Users\runneradmin\.nuget\packages
+          key: ${{ runner.os }}-dotnet-maui-${{ hashFiles('**/*.csproj', 'global.json', '**/Directory.Build.props') }}
+          restore-keys: |
+            ${{ runner.os }}-dotnet-maui-
+            ${{ runner.os }}-dotnet-
+   
+      - name: Installeer .NET SDK (wanneer niet gecached)
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.0.x'  # Gebruik de juiste versie voor MAUI
+          dotnet-version: '8.0.x'
  
-      - name: Installeer MAUI workloads
-        run: dotnet workload install maui
+      - name: Installeer MAUI workloads (als niet gecached)
+        run: |
+          if (!(dotnet workload list | Select-String "maui-windows")) {
+            Write-Host "Installing MAUI workload..."
+            dotnet workload install maui-windows
+          } else {
+            Write-Host "MAUI workload already cached"
+          }
+        shell: pwsh
  
       - name: Herstel afhankelijkheden
         run: dotnet restore
+        
+      - name: Bouw Core Projects
+        run: |
+         dotnet build Grocery.Core --configuration Release -f net8.0
+         dotnet build Grocery.Core.Data --configuration Release -f net8.0
+
+      - name: Bouw Test Project
+        run: dotnet build Grocery.App.Tests --configuration Release -f net8.0
  
-      - name: Bouw de applicatie
-        run: dotnet build --configuration Release -f net8.0-windows10.0.19041.0 /p:RuntimeIdentifierOverride=win-x64
+      - name: Bouw Grocery.App
+        run: dotnet build Grocery.App --configuration Release -f net8.0-windows10.0.19041.0 /p:RuntimeIdentifierOverride=win-x64
  
       - name: Voer unit tests uit
         run: dotnet test --configuration Release --no-restore --no-build --verbosity normal

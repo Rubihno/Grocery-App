@@ -1,4 +1,5 @@
-﻿using Grocery.Core.Interfaces.Repositories;
+﻿using Grocery.Core.Helpers;
+using Grocery.Core.Interfaces.Repositories;
 using Grocery.Core.Interfaces.Services;
 using Grocery.Core.Models;
 using System;
@@ -31,6 +32,15 @@ namespace Grocery.Core.Services
         {
             List<Client> clients = _clientRepository.GetAll();
             return clients;
+        }
+
+        public void AddNieuwAccountToClientList(int id, string gebruikersnaam, string email, string wachtwoord)
+        {
+            string hashWachtwoord = PasswordHelper.HashPassword(wachtwoord);
+
+            Client client = new Client(id, gebruikersnaam, email, hashWachtwoord);
+
+            _clientRepository.AddClient(client);
         }
     }
 }
