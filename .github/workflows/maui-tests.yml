@@ -16,24 +16,28 @@ jobs:
       - name: Haal de repository op
         uses: actions/checkout@v4
 
-      - name: Cache Files
-        uses: actions/cache@v4.3.0
+      - name: Cache .NET SDK and MAUI workloads
+        uses: actions/cache@v3
         with:
-          # A list of files, directories, and wildcard patterns to cache and restore
           path: |
-           ~/.nuget/packages
-           ~/.dotnet/workloads
-           ~/.dotnet/tools
-          key: ${{ runner.os }}-dotnet-${{ hashFiles('**/*.csproj', '**/global.json') }}
-          restore-keys: ${{ runner.os }}-dotnet-
- 
-      - name: Installeer .NET SDK
+            ~/.dotnet/packs
+            ~/.dotnet/workloads
+            ~/.dotnet/metadata/workloads
+            ~/.dotnet/sdk
+            ~/.dotnet/shared
+            ~/.nuget/packages
+          key: ${{ runner.os }}-dotnet-maui-${{ hashFiles('**/*.csproj', 'global.json', '**/Directory.Build.props') }}
+          restore-keys: |
+            ${{ runner.os }}-dotnet-maui-
+            ${{ runner.os }}-dotnet-
+   
+      - name: Installeer .NET SDK (wanneer niet gecached)
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.0.x'  # Gebruik de juiste versie voor MAUI
  
       - name: Installeer MAUI workloads
-        run: dotnet workload install maui-windows # Ik build alleen voor windows, door maui-windows alleen te installeren verlaagt dit workflow time
+        run: dotnet workload install maui-windows
  
       - name: Herstel afhankelijkheden
         run: dotnet restore
