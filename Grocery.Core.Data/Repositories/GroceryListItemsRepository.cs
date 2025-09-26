@@ -48,7 +48,9 @@ namespace Grocery.Core.Data.Repositories
 
         public GroceryListItem? Update(GroceryListItem item)
         {
-            throw new NotImplementedException();
+            GroceryListItem? listItem = groceryListItems.FirstOrDefault(i => i.Id == item.Id);
+            listItem = item;
+            return listItem;
         }
     }
 }
