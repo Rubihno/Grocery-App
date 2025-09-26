@@ -8,6 +8,8 @@ namespace Grocery.App.ViewModels
     {
         private readonly IGroceryListItemsService _groceryListItemsService;
         public ObservableCollection<BestSellingProducts> Products { get; set; } = [];
+
+        public string NoProductsSoldMessage { get;set; } 
         public BestSellingProductsViewModel(IGroceryListItemsService groceryListItemsService)
         {
             _groceryListItemsService = groceryListItemsService;
@@ -17,10 +19,17 @@ namespace Grocery.App.ViewModels
 
         public override void Load()
         {
+            List<BestSellingProducts> bestSellingProducts = _groceryListItemsService.GetBestSellingProducts();
             Products.Clear();
-            foreach (BestSellingProducts item in _groceryListItemsService.GetBestSellingProducts())
+
+            if (bestSellingProducts.Count() == 0)
             {
-                Products.Add(item);
+                NoProductsSoldMessage = "Er zijn nog geen producten verkocht";
+            }
+            else
+            {
+                NoProductsSoldMessage = string.Empty;
+                bestSellingProducts.ForEach(item => Products.Add(item));
             }
         }
 
