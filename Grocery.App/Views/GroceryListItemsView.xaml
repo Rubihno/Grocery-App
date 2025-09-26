@@ -5,7 +5,8 @@
              xmlns:vm="clr-namespace:Grocery.App.ViewModels"
              x:Class="Grocery.App.Views.GroceryListItemsView"
              x:DataType="vm:GroceryListItemsViewModel"
-             Title="GroceryListItemsView">
+             Title="GroceryListItemsView"
+             x:Name="ViewModel">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Wijzig kleur" Command="{Binding ChangeColorCommand}" IconImageSource="{FontImage Glyph='&#xf30c;', Color=Black, Size=22}" />
@@ -41,10 +42,22 @@
                             <Label Grid.Column="0" Text="{Binding Product.Name}" VerticalOptions="Center"/>
                             <Label Grid.Column="1" Text="{Binding Amount}" VerticalOptions="Center" HorizontalOptions="End" Margin="0,0,10,0"/>
                             <Grid Grid.Column="2">
-                                <Image Source="plus.png" WidthRequest="15" HeightRequest="15"/>
+                                <Image Source="plus.png" MaximumWidthRequest="15" MaximumHeightRequest="15">
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer 
+                                            Command="{Binding BindingContext.IncreaseAmountCommand, Source={x:Reference ViewModel}}" 
+                                            CommandParameter="{Binding ProductId}"/>
+                                    </Image.GestureRecognizers>
+                                </Image>
                             </Grid>
                             <Grid Grid.Column="3">
-                                <Image Source="min.png" WidthRequest="15" HeightRequest="15"/>
+                                <Image Source="min.png" MaximumWidthRequest="15" MaximumHeightRequest="15">
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer 
+                                            Command="{Binding BindingContext.DecreaseAmountCommand, Source={x:Reference ViewModel}}" 
+                                            CommandParameter="{Binding ProductId}"/>
+                                    </Image.GestureRecognizers>
+                                </Image>
                             </Grid>
                         </Grid>
                     </DataTemplate>
