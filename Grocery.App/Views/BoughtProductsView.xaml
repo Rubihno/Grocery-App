@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Grocery.App.ViewModels"
+             xmlns:m="clr-namespace:Grocery.Core.Models;assembly=Grocery.Core"
+             x:Class="Grocery.App.Views.BoughtProductsView"
+             x:DataType="vm:BoughtProductsViewModel"
+             Title="BoughtProductsView">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Picker Grid.Column="0" Grid.Row="0" Margin="10,0,0,0" Title="Klik op onderstaand pijltje om een product te selecteren:"
+        ItemsSource="{Binding Products}"
+        SelectedItem="{Binding SelectedProduct, Mode=TwoWay}" 
+        SelectedIndexChanged="Picker_SelectedIndexChanged"
+        BackgroundColor="{StaticResource Primary}"
+            TextColor="{StaticResource Secondary}">
+        </Picker>
+        <Border Grid.Row="1" Grid.Column="0" Stroke="#C49B33" StrokeThickness="4" Padding="5" Margin="5" HorizontalOptions="Center">
+            <CollectionView ItemsSource="{Binding BoughtProductsList}" Margin="5" HorizontalOptions="End" SelectionMode="Single">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="m:BoughtProducts" >
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <!-- Toon hier de naam van de Client naam van de boodschappenlijst -->
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.EmptyView>
+                    <ContentView>
+                        <Label Text="Er zijn geen verkochte producten" FontSize="18" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+                    </ContentView>
+                </CollectionView.EmptyView>
+            </CollectionView>
+        </Border>
+    </Grid>
+</ContentPage>

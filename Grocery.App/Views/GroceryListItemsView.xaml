@@ -56,9 +56,9 @@
             <StackLayout>
                 <SearchBar x:Name="searchBar"  Placeholder="Zoek een product..." SearchCommand="{Binding SearchCommand}" SearchCommandParameter="{Binding Text, x:DataType='SearchBar', Source={x:Reference searchBar}}"/>
                 <CollectionView ItemsSource="{Binding AvailableProducts}" Margin="5" WidthRequest="300" HorizontalOptions="Start"
-                    SelectionMode="Single"
-                    SelectionChangedCommand="{Binding AddProductCommand}"
-                    SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}">
+            SelectionMode="Single"
+            SelectionChangedCommand="{Binding AddProductCommand}"
+            SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}">
                     <CollectionView.ItemsLayout>
                         <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
                     </CollectionView.ItemsLayout>

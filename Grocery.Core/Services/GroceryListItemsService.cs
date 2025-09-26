@@ -41,10 +41,15 @@ namespace Grocery.Core.Services
 
         public GroceryListItem? Get(int id)
         {
-            throw new NotImplementedException();
+            return _groceriesRepository.Get(id);
         }
 
         public GroceryListItem? Update(GroceryListItem item)
+        {
+            return _groceriesRepository.Update(item);
+        }
+
+        public List<BestSellingProducts> GetBestSellingProducts(int topX = 5)
         {
             throw new NotImplementedException();
         }
