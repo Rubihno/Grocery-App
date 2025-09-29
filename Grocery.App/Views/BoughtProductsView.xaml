@@ -34,7 +34,8 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <!-- Toon hier de naam van de Client naam van de boodschappenlijst -->
+                            <Label Text="{Binding Client.Name}" Grid.Column="0" VerticalOptions="Center" HorizontalOptions="Center" FontSize="13"/>
+                            <Label Text="{Binding GroceryList.Name}" Grid.Column="1" VerticalOptions="Center" HorizontalOptions="Center" FontSize="13"/>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
