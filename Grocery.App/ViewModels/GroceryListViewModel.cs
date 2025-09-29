@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Grocery.App.Views;
 using Grocery.Core.Interfaces.Services;
 using Grocery.Core.Models;
+using Microsoft.Maui.Platform;
 using System.Collections.ObjectModel;
 
 namespace Grocery.App.ViewModels
@@ -9,11 +11,13 @@ namespace Grocery.App.ViewModels
     public partial class GroceryListViewModel : BaseViewModel
     {
         public ObservableCollection<GroceryList> GroceryLists { get; set; }
+        public GlobalViewModel _global { get; set; }
         private readonly IGroceryListService _groceryListService;
 
         public GroceryListViewModel(IGroceryListService groceryListService, GlobalViewModel global) 
         {
-            Title = $"Boodschappen van {global.Client.Name}";
+            _global = global;
+            Title = $"Boodschappen van {_global.Client.Name}";
 
             _groceryListService = groceryListService;
             GroceryLists = new(_groceryListService.GetAll());
@@ -35,6 +39,15 @@ namespace Grocery.App.ViewModels
         {
             base.OnDisappearing();
             GroceryLists.Clear();
+        }
+
+        [RelayCommand]
+        public void ShowBoughtProducts()
+        {
+            if (_global.Client.currentRole == Role.Admin)
+            {
+                Shell.Current.GoToAsync($"{nameof(BoughtProductsView)}");
+            }
         }
     }
 }
