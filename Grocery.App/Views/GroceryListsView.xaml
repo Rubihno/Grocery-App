@@ -4,12 +4,16 @@
              x:Class="Grocery.App.Views.GroceryListsView"
              xmlns:vm="clr-namespace:Grocery.App.ViewModels"
              xmlns:m="clr-namespace:Grocery.Core.Models;assembly=Grocery.Core"
+             x:DataType="vm:GroceryListViewModel"
              Title="GroceryListsView">
     <Shell.TitleView>
         <Grid>
             <Label Text="{Binding Title}" FontSize="Large" HorizontalOptions="Center" VerticalOptions="Center" />
         </Grid>
     </Shell.TitleView>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="{Binding _global.Client.Name}" Command="{Binding ShowBoughtProductsCommand}" />
+    </ContentPage.ToolbarItems>
 
     <Border Stroke="#C49B33"
         StrokeThickness="4"
@@ -23,7 +27,6 @@
             <CollectionView.ItemsLayout>
                 <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
             </CollectionView.ItemsLayout>
-
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="m:GroceryList">
                     <Grid>

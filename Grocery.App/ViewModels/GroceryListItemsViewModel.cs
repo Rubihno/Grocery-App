@@ -1,15 +1,11 @@
 ﻿using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Maui.Core.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Grocery.App.Views;
 using Grocery.Core.Interfaces.Services;
 using Grocery.Core.Models;
 using System.Collections.ObjectModel;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Grocery.App.ViewModels
 {
@@ -120,6 +116,32 @@ namespace Grocery.App.ViewModels
                 Shell.Current.DisplayAlert("Onbekend product", "Product staat niet in de lijst!", "OK");
             }
 
+        }
+
+        [RelayCommand]
+        public void IncreaseAmount(int productId)
+        {
+            GroceryListItem? item = MyGroceryListItems.FirstOrDefault(x => x.ProductId == productId);
+            if (item == null) return;
+            if (item.Amount >= item.Product.Stock) return;
+            item.Amount++;
+            _groceryListItemsService.Update(item);
+            item.Product.Stock--;
+            _productService.Update(item.Product);
+            OnGroceryListChanged(GroceryList);
+        }
+
+        [RelayCommand]
+        public void DecreaseAmount(int productId)
+        {
+            GroceryListItem? item = MyGroceryListItems.FirstOrDefault(x => x.ProductId == productId);
+            if (item == null) return;
+            if (item.Amount <= 0) return;
+            item.Amount--;
+            _groceryListItemsService.Update(item);
+            item.Product.Stock++;
+            _productService.Update(item.Product);
+            OnGroceryListChanged(GroceryList);
         }
 
     }

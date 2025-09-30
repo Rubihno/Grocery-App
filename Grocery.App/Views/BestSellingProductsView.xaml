@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Grocery.App.ViewModels"
+             xmlns:m="clr-namespace:Grocery.Core.Models;assembly=Grocery.Core"
+             x:Class="Grocery.App.Views.BestSellingProductsView"
+             x:DataType="vm:BestSellingProductsViewModel"
+             Title="BestSellingProductsView">
+    <Shell.TitleView>
+        <Grid>
+            <Label Text="Best verkochte producten" FontSize="Large" HorizontalOptions="Center" VerticalOptions="Center" />
+        </Grid>
+    </Shell.TitleView>
+
+    <Border Stroke="#C49B33" StrokeThickness="4" Padding="10" Margin="10" HorizontalOptions="Center">
+        <CollectionView ItemsSource="{Binding Products}" Margin="20" HorizontalOptions="Center">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.Header>
+                <StackLayout>
+                    <Grid Padding="5" BackgroundColor="Gray">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.5*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Text="#" VerticalOptions="Center" HorizontalOptions="Center" FontAttributes="Bold" FontSize="20"/>
+                        <Label Grid.Column="1" Text="Product" VerticalOptions="Center" HorizontalOptions="Center" FontAttributes="Bold" FontSize="20"/>
+                        <Label Grid.Column="2" Text="Aantal verkocht" VerticalOptions="Center" HorizontalOptions="Center" FontAttributes="Bold" FontSize="20"/>
+                        <Label Grid.Column="3" Text="Aantal voorraad" VerticalOptions="Center" HorizontalOptions="Center" FontAttributes="Bold" FontSize="20"/>
+                    </Grid>
+                    <Label Text="{Binding NoProductsSoldMessage}" FontSize="15"/>
+                </StackLayout>
+            </CollectionView.Header>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="m:BestSellingProducts">
+                    <Grid Padding="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.5*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Text="{Binding Ranking}" VerticalOptions="Center" HorizontalOptions="Center" FontSize="13"/>
+                        <Label Grid.Column="1" Text="{Binding Name}" VerticalOptions="Center" HorizontalOptions="Center" FontSize="13"/>
+                        <Label Grid.Column="2" Text="{Binding NrOfSells}" VerticalOptions="Center" HorizontalOptions="Center" FontSize="13"/>
+                        <Label Grid.Column="3" Text="{Binding Stock}" VerticalOptions="Center" HorizontalOptions="Center" FontSize="13"/>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Border>
+</ContentPage>
