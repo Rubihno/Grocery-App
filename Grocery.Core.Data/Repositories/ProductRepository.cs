@@ -19,7 +19,7 @@ namespace Grocery.Core.Data.Repositories
             return products;
         }
 
-        public Product? Get(int id)
+        public Product? Get(int? id)
         {
             return products.FirstOrDefault(p => p.Id == id);
         }

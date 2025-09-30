@@ -1,6 +1,7 @@
 ﻿using Grocery.Core.Interfaces.Repositories;
 using Grocery.Core.Interfaces.Services;
 using Grocery.Core.Models;
+using System.Diagnostics.Tracing;
 
 namespace Grocery.Core.Services
 {
@@ -19,7 +20,20 @@ namespace Grocery.Core.Services
         }
         public List<BoughtProducts> Get(int? productId)
         {
-            throw new NotImplementedException();
+            Product product = _productRepository.Get(productId);
+            List<GroceryListItem> groceryListItems = _groceryListItemsRepository.GetAllOnGroceryItemId(productId);
+            List<BoughtProducts> boughtProductsList = new();
+
+            foreach(GroceryListItem item in groceryListItems)
+            {
+                GroceryList groceryList = _groceryListRepository.Get(item.GroceryListId);
+                Client client = _clientRepository.Get(groceryList.ClientId);
+                BoughtProducts boughtProduct = new BoughtProducts(client, groceryList, product);
+
+                boughtProductsList.Add(boughtProduct);
+            }
+
+            return boughtProductsList;
         }
     }
 }

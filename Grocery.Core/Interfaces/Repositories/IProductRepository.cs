@@ -6,7 +6,7 @@ namespace Grocery.Core.Interfaces.Repositories
     {
         public List<Product> GetAll();
 
-        public Product? Get(int id);
+        public Product? Get(int? id);
 
         public Product Add(Product item);
 

@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Core.Extensions;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Grocery.Core.Interfaces.Services;
 using Grocery.Core.Models;
@@ -24,7 +25,8 @@ namespace Grocery.App.ViewModels
 
         partial void OnSelectedProductChanged(Product? oldValue, Product newValue)
         {
-            //Zorg dat de lijst BoughtProductsList met de gegevens die passen bij het geselecteerde product. 
+            BoughtProductsList.Clear();
+            _boughtProductsService.Get(newValue.Id).ForEach(item => BoughtProductsList.Add(item));
         }
 
         [RelayCommand]
