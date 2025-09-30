@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Grocery.App.ViewModels"
+             x:Class="Grocery.App.Views.RegistratieView"
+             x:DataType="vm:RegistrationViewModel">
+    <StackLayout Padding="20" VerticalOptions="Center">
+        <Label Text="Account Aanmaken" FontSize="24" HorizontalOptions="Center"/>
+        <Entry Text="{Binding EmailAddress}" Placeholder="Emailadres" HorizontalOptions="Fill" Keyboard="Email"/>
+        <Label Text="{Binding EmailValidationMessage}" TextColor="Red"/>
+        <Entry Text="{Binding Name}" Placeholder="Gebruikersnaam" HorizontalOptions="Fill" Keyboard="Text" MaxLength="20"/>
+        <Label Text="{Binding NameValidationMessage}" TextColor="Red"/>
+        <Entry Text="{Binding Password}" Placeholder="Wachtwoord" HorizontalOptions="Fill" IsPassword="{Binding IsPassword}"/>
+        <Entry Text="{Binding PasswordConfirmation}" Placeholder="Wachtwoord bevestiging" HorizontalOptions="Fill" IsPassword="{Binding IsPassword}"/>
+        <HorizontalStackLayout>
+            <CheckBox CheckedChanged="OnCheckBoxChanged" HorizontalOptions="Center" VerticalOptions="Center"/>
+            <Label Text="Wachtwoord weergeven" HorizontalOptions="Center" VerticalOptions="Center"/>
+        </HorizontalStackLayout>
+        <Label Text="{Binding PasswordValidationMessage}" TextColor="Red"/>
+        <Button Text="Registreren" HorizontalOptions="Fill" Command="{Binding RegistrationCommand}"/>
+        <Label Text="{Binding EmptyFieldMessage}" TextColor="Red"/>
+        <Button Text="Annuleren" HorizontalOptions="Fill" Command="{Binding CancelCommand}"/>
+    </StackLayout>
+</ContentPage>

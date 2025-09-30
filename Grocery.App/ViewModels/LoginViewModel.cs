@@ -16,7 +16,7 @@ namespace Grocery.App.ViewModels
         private readonly IAuthService _authService;
         private readonly GlobalViewModel _global;
         private readonly IClientRepository _clientRepository;
-        private readonly IValidatieService _validatieService;
+        private readonly IValidationService _validatieService;
         private readonly IClientService _clientService;
 
         [ObservableProperty]
@@ -28,7 +28,7 @@ namespace Grocery.App.ViewModels
         [ObservableProperty]
         private string loginMessage;
 
-        public LoginViewModel(IAuthService authService, GlobalViewModel global, IClientRepository clientRepository, IValidatieService validatieService, IClientService clientService)
+        public LoginViewModel(IAuthService authService, GlobalViewModel global, IClientRepository clientRepository, IValidationService validatieService, IClientService clientService)
         { //_authService = App.GetServices<IAuthService>().FirstOrDefault();
             _authService = authService;
             _global = global;
@@ -56,7 +56,7 @@ namespace Grocery.App.ViewModels
         [RelayCommand]
         private void AccountAanmaken()
         {
-            RegistratieViewModel registratieViewModel = new RegistratieViewModel(_clientRepository, _validatieService, _clientService);
+            RegistrationViewModel registratieViewModel = new RegistrationViewModel(_clientRepository, _validatieService, _clientService);
             Application.Current.MainPage.Navigation.PushModalAsync(new RegistratieView(registratieViewModel));
         }
     }
