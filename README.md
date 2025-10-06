@@ -1,20 +1,54 @@
-# GroceryApp sprint4 Studentversie  
+# GroceryApp sprint5 Studentversie  
+Dit is de startversie voor studenten voor sprint 5.  
+ 
+## UC15 Toevoegen THT datum aan product 
+Is compleet.  
 
-## UC10 Productaantal in boodschappenlijst
-Aanpassingen zijn compleet.
+## UC14 Toevoegen prijzen:  
+- Prijs toevoegen aan product class en uitbreiden constructor chain.  
+- ProductRepository --> prijsveld vullen met waarden.  
+- ProductView uitbreiden met kolom voor de prijs (header en inhoud van de tabel).      
 
-## UC11 Meest verkochte producten
-Vereist aanvulling:  
-- Werk in GroceryListItemsService de methode GetBestSellingProducts uit.  
-- In BestSellingProductsView de kop van de tabel aanvullen met de gewenste kopregel boven de tabel. Daarnaast de inhoud van de tabel uitwerken.
-
-## UC13 Klanten tonen per product  
-Deze UC toont de klanten die een bepaald product hebben gekocht:  
-- Maak enum Role met als waarden None en Admin.  
-- Geef de Client class een property Role metb als type de enum Role. De default waarde is None.  
-- In Client Repo koppel je de rol Role.Admin aan user3 (= admin).
-- In BoughtProductsService werk je de Get(productid) functie uit zodat alle Clients die product met productid hebben gekocht met client, boodschappenlijst en product in de lijst staan die wordt geretourneerd.  
-- In BoughtProductsView moet de naam van de Client ewn de naam van de Boodschappenlijst worden getoond in de CollectionView.  
-- In BoughtProductsViewModel de OnSelectedProductChanged uitwerken zodat bij een ander product de lijst correct wordt gevuld.  
-- In GroceryListViewModel maak je de methode ShowBoughtProducts(). Als de Client de rol admin heeft dan navigeer je naar BoughtProductsView. Anders doe je niets.  
-- In GroceryListView voeg je een ToolbarItem toe met als binding Client.Name en als Command ShowBoughtProducts.  
+## UC12 Productcategoriën toevoegen --> zelfstandig uitwerken:  
+Ontwerp:
+>```mermaid
+>classDiagram
+>direction LR
+>    class Product {
+>	    +int Id
+>	    +string Name
+>	    +int Stock
+>	    +DateOnly ShelfLife
+>	    +Decimal Price
+>   }
+>    class ProductCategory {
+>	    +int Id
+>	    +string Name
+>	    +int ProductId
+>	    +int CategoryId
+>    }
+>    class Category {
+>	    +int Id
+>	    +string Name
+>    }
+>
+>    Product "1" -- "*" ProductCategory
+>    ProductCategory "*" -- "1" Category
+> ```
+Stappenplan:  
+- Maak class Category  
+- Maak class ProductCategory  
+- Maak Interface en Repository voor Category  
+- Maak Interface en Repository voor ProductCategory  
+- Maak Interface en Service voor Category  
+- Maak Interface en Service voor ProductCategory  
+- Registreer de gemaakte Repo's en services in MauiProgramm  
+- Maak CategoriesViewModel.  
+- Maak CategoriesView.  
+- Registreer De view en het ViewModel in MauiProgramm.  
+- Maak een menu entry in de tabbar in AppShell.xaml en registreer route in AppShell.xaml.cs  
+- Maak ProductCategoriesViewModel.  
+- Maak ProductCategoriesView.  
+- Registreer De view en het ViewModel in MauiProgramm.  
+- Zorg dat de ProductCategoriesView gestart kan worden na het klikken op een Category in CategoriesView  
+- Registreer route naar ProductCategoriesView in AppShell.xaml.cs  
