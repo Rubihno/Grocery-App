@@ -9,10 +9,10 @@ namespace Grocery.Core.Interfaces.Services
 {
     public interface IProductCategoryService
     {
-        public Category? Get(int id);
-        public List<Category> GetAll();
-        public void Add(Product product);
-        public void Remove(Product product);
-        public void Update();
+        public ProductCategory? Get(int id);
+        public List<ProductCategory> GetAll();
+        public void Add(ProductCategory item);
+        public void Remove(ProductCategory item);
+        public ProductCategory Update(ProductCategory item);
     }
 }

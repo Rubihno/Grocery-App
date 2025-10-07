@@ -10,13 +10,26 @@ namespace Grocery.Core.Data.Repositories
 {
     public class CategoryRepository : ICategoryRepository
     {
+        private readonly List<Category> categories;
+
+        public CategoryRepository()
+        {
+            categories = [
+                    new Category(1, "Groente"),
+                    new Category(2, "Bakkerij"),
+                    new Category(3, "Zuivel"),
+                    new Category(4, "Vleeswaren"),
+                    new Category(5, "Fruit")
+                ];
+        }
+
         public Category? Get(int id)
         {
-            throw new NotImplementedException();
+            return categories.FirstOrDefault(c => c.Id == id);
         }
         public List<Category> GetAll()
         {
-            throw new NotImplementedException();
+            return categories;
         }
     }
 }

@@ -10,25 +10,38 @@ namespace Grocery.Core.Data.Repositories
 {
     public class ProductCategoryRepository : IProductCategoryRepository
     {
-        public Category? Get(int id)
+        private readonly List<ProductCategory> productCategories;
+
+        public ProductCategoryRepository()
         {
-            throw new NotImplementedException();
+            productCategories = [
+                    new ProductCategory(1, "Brood", 3, 2), 
+                    new ProductCategory(2, "Melk", 1, 3)
+                ];
         }
-        public List<Category> GetAll()
+
+        public ProductCategory? Get(int id)
         {
-            throw new NotImplementedException();
+            return productCategories.FirstOrDefault(p => p.Id == id);
         }
-        public void Add(Product product)
+        public List<ProductCategory> GetAll()
         {
-            throw new NotImplementedException();
+            return productCategories;
         }
-        public void Remove(Product product)
+        public void Add(ProductCategory item)
         {
-            throw new NotImplementedException();
+            productCategories.Add(item);
         }
-        public void Update()
+        public void Remove(ProductCategory item)
         {
-            throw new NotImplementedException();
+            productCategories.Remove(item);
+        }
+        public ProductCategory Update(ProductCategory item)
+        {
+            ProductCategory? productCategory = productCategories.FirstOrDefault(p => p.Id == item.Id);
+            if (productCategory == null) return null;
+            productCategory.Id = item.Id;
+            return productCategory;
         }
     }
 }

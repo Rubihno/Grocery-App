@@ -20,11 +20,11 @@ namespace Grocery.Core.Services
 
         public Category? Get(int id)
         {
-            throw new NotImplementedException();
+            return _categoryRepostitory.Get(id);
         }
         public List<Category> GetAll()
         {
-            throw new NotImplementedException();
+            return _categoryRepostitory.GetAll();
         }
     }
 }

@@ -10,25 +10,32 @@ namespace Grocery.Core.Services
 {
     public class ProductCategoryService : IProductCategoryService
     {
-        public Category? Get(int id)
+        private readonly IProductCategoryService _productCategories;
+
+        public ProductCategoryService(IProductCategoryService productCategories)
         {
-            throw new NotImplementedException();
+            _productCategories = productCategories;
         }
-        public List<Category> GetAll()
+
+        public ProductCategory? Get(int id)
         {
-            throw new NotImplementedException();
+            return _productCategories.Get(id);
         }
-        public void Add(Product product)
+        public List<ProductCategory> GetAll()
         {
-            throw new NotImplementedException();
+            return _productCategories.GetAll();
         }
-        public void Remove(Product product)
+        public void Add(ProductCategory item)
         {
-            throw new NotImplementedException();
+            _productCategories.Add(item);
         }
-        public void Update()
+        public void Remove(ProductCategory item)
         {
-            throw new NotImplementedException();
+            _productCategories.Remove(item);
+        }
+        public ProductCategory Update(ProductCategory item)
+        {
+            return _productCategories.Update(item);
         }
     }
 }

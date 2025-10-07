@@ -9,10 +9,10 @@ namespace Grocery.Core.Interfaces.Repositories
 {
     public interface IProductCategoryRepository
     {
-        public Category? Get(int id);
-        public List<Category> GetAll();
-        public void Add(Product product);
-        public void Remove(Product product);
-        public void Update();
+        public ProductCategory? Get(int id);
+        public List<ProductCategory> GetAll();
+        public void Add(ProductCategory productCategory);
+        public void Remove(ProductCategory productCategory);
+        public ProductCategory Update(ProductCategory productCategory);
     }
 }
