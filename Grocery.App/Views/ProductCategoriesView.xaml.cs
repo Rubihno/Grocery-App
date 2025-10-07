@@ -10,10 +10,4 @@ public partial class ProductCategoriesView : ContentPage
 		BindingContext = viewModel;
         _viewModel = viewModel;
 	}
-
-    protected override void OnDisappearing()
-    {
-        base.OnDisappearing();
-        _viewModel.ResetCategory();
-    }
 }

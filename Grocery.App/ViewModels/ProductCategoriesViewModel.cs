@@ -46,7 +46,7 @@ namespace Grocery.App.ViewModels
             AvailableProducts.Clear();
 
             AddSelectedProductCategories(id);
-            AddAvailableProduct(id);
+            AddAvailableProducts(id);
         }
 
         partial void OnSelectedProductChanged(Product? value)
@@ -71,7 +71,7 @@ namespace Grocery.App.ViewModels
             }
         }
 
-        private void AddAvailableProduct(int id)
+        private void AddAvailableProducts(int id)
         {
             List<Product> products = _productService.GetAll();
 
@@ -100,11 +100,6 @@ namespace Grocery.App.ViewModels
             Load(Category.Id);
         }
 
-        public void ResetCategory()
-        {
-            Category = new(0, "None");
-        }
-
         [RelayCommand]
         public void RemoveProduct(ProductCategory item)
         {
@@ -115,7 +110,32 @@ namespace Grocery.App.ViewModels
         [RelayCommand]
         public void Search(string text)
         {
-            throw new NotImplementedException();
+            bool matchFound = false;
+            List<Product> productMatchList = new List<Product>();
+
+            Load(Category.Id);
+
+            foreach (Product product in AvailableProducts)
+            {
+                if (product.Name.ToLower().Contains(text.ToLower()))
+                {
+                    productMatchList.Add(product);
+                    matchFound = true;
+                }
+            }
+
+            if (matchFound)
+            {
+                AvailableProducts.Clear();
+                foreach (Product product in productMatchList)
+                {
+                    AvailableProducts.Add(product);
+                }
+            }
+            else if (text != string.Empty && !matchFound)
+            {
+                Shell.Current.DisplayAlert("Onbekend product", "Product staat niet in de lijst!", "OK");
+            }
         }
     }
 }
