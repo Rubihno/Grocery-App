@@ -110,27 +110,15 @@ namespace Grocery.App.ViewModels
         [RelayCommand]
         public void Search(string text)
         {
-            bool matchFound = false;
-            List<Product> productMatchList = new List<Product>();
-
             Load(Category.Id);
 
-            foreach (Product product in AvailableProducts)
-            {
-                if (product.Name.ToLower().Contains(text.ToLower()))
-                {
-                    productMatchList.Add(product);
-                    matchFound = true;
-                }
-            }
+            List<Product> productMatchList = AvailableProducts.Where(p => p.Name.Contains(text, StringComparison.OrdinalIgnoreCase)).ToList();
+            bool matchFound = productMatchList.Any();
 
             if (matchFound)
             {
                 AvailableProducts.Clear();
-                foreach (Product product in productMatchList)
-                {
-                    AvailableProducts.Add(product);
-                }
+                productMatchList.ForEach(item => AvailableProducts.Add(item));
             }
             else if (text != string.Empty && !matchFound)
             {
