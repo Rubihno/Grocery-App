@@ -26,6 +26,7 @@ namespace Grocery.App.ViewModels
         [RelayCommand]
         public async Task SelectCategory(Category category)
         {
+            if (category == null) return;
             Dictionary<string, object> paramater = new() { { nameof(Category), category } };
             await Shell.Current.GoToAsync($"{nameof(Views.ProductCategoriesView)}?Title={category.Name}", true, paramater);
         }

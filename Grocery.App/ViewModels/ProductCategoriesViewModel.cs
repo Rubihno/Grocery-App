@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Core.Extensions;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Grocery.Core.Interfaces.Repositories;
 using Grocery.Core.Interfaces.Services;
@@ -16,54 +17,96 @@ namespace Grocery.App.ViewModels
     public partial class ProductCategoriesViewModel : BaseViewModel
     {
         private readonly IProductCategoryService _productCategoryService;
+        private readonly IProductService _productService;
 
         public List<ProductCategory> ProductCategories { get; set; }
-        public ProductCategory nullProductCategory = new ProductCategory(0, "None", 0, 0);
 
         [ObservableProperty]
         Category category = new(0, "None");
 
-        public ObservableCollection<ProductCategory> selectedProductCategories;
+        [ObservableProperty]
+        private Product? selectedProduct;
+
+        public ObservableCollection<ProductCategory> selectedProductCategories { get; set; } = [];
         public ObservableCollection<Product> AvailableProducts { get; set; } = [];
 
-        public ProductCategoriesViewModel(IProductCategoryService productCategoryService)
+        public ProductCategoriesViewModel(IProductCategoryService productCategoryService, IProductService productService)
         {
             _productCategoryService = productCategoryService;
+            _productService = productService;
 
             ProductCategories = _productCategoryService.GetAll();
-            selectedProductCategories = new ObservableCollection<ProductCategory>();
-            AvailableProducts = new ObservableCollection<Product>();
-
-            Load(category.Id);
         }
+
+        partial void OnCategoryChanged(Category value) => Load(value.Id);
 
         private void Load(int id)
         {
             selectedProductCategories.Clear();
-            // Tijdelijke oplossing indien id null is om layout te testen
-            if (id == null)
+            AvailableProducts.Clear();
+
+            AddSelectedProductCategories(id);
+            AddAvailableProduct(id);
+        }
+
+        partial void OnSelectedProductChanged(Product? value)
+        {
+            if (value != null)
             {
-                selectedProductCategories.Add(nullProductCategory);
+                AddProduct(value);
             }
-            else 
+            
+            SelectedProduct = null;
+        }
+
+        private void AddSelectedProductCategories(int id)
+        {
+            foreach (ProductCategory item in ProductCategories)
             {
-                foreach (ProductCategory item in ProductCategories)
+                if (item.CategoryId == id)
                 {
-                    if (item.CategoryId == id) selectedProductCategories.Add(item);
+                    item.Id = selectedProductCategories.Count() + 1;
+                    selectedProductCategories.Add(item);
                 }
             }
         }
-        partial void OnCategoryChanged(Category value) => Load(value.Id);
 
-        [RelayCommand]
-        public void AddProductCommand(ProductCategory item)
+        private void AddAvailableProduct(int id)
         {
-            _productCategoryService.Add(item);
+            List<Product> products = _productService.GetAll();
+
+            List<Product> selectedProducts = new();
+
+            foreach (ProductCategory item in ProductCategories.Where(x => x.CategoryId == id))
+            {
+                Product product = _productService.Get(item.ProductId);
+                if (!selectedProducts.Contains(product)) selectedProducts.Add(product);
+            }
+
+            foreach (Product item in products.Where(x => !selectedProducts.Contains(x)).ToObservableCollection())
+            {
+                AvailableProducts.Add(item);
+            }
+        }
+
+        public void AddProduct(Product item)
+        {
+            int productCategoryId = ProductCategories.Count() + 1;
+            ProductCategory productCategory = new(productCategoryId, item.Name, item.Id, Category.Id);
+
+            if (!selectedProductCategories.Contains(productCategory)) _productCategoryService.Add(productCategory);
+            
+            ProductCategories = _productCategoryService.GetAll();
             Load(Category.Id);
         }
 
+        public void ResetCategory()
+        {
+            Category = new(0, "None");
+        }
+
         [RelayCommand]
-        public void RemoveProductCommand(ProductCategory item)
+        public void RemoveProduct(ProductCategory item)
         {
             _productCategoryService.Remove(item);
             Load(Category.Id);

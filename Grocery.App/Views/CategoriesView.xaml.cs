@@ -9,4 +9,15 @@ public partial class CategoriesView : ContentPage
 		InitializeComponent();
 		BindingContext = viewModel;
 	}
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+
+        // Reset de selectie van de CollectionView
+        var collectionView = this.FindByName<CollectionView>("categoriesCollectionView");
+        if (collectionView != null)
+        {
+            collectionView.SelectedItem = null;
+        }
+    }
 }

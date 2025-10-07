@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:m="clr-namespace:Grocery.Core.Models;assembly=Grocery.Core"
              xmlns:vm="clr-namespace:Grocery.App.ViewModels"
              x:Class="Grocery.App.Views.ProductCategoriesView"
+             x:DataType="vm:ProductCategoriesViewModel"
              Title="ProductCategoriesView">
     <Shell.TitleView>
         <Grid>
@@ -16,7 +18,7 @@
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         <Border Grid.Column="0" Stroke="#C49B33" StrokeThickness="4" Padding="10" Margin="10" HorizontalOptions="Center">
-            <CollectionView ItemsSource="{Binding SelectedProductCategories}" Margin="20" 
+            <CollectionView ItemsSource="{Binding selectedProductCategories}" Margin="20" 
                             HorizontalOptions="Center" 
                             EmptyView="De categorie is nog leeg. Voeg eerst een product toe!"
                             SelectionMode="Single"
@@ -25,15 +27,25 @@
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
                 </CollectionView.ItemsLayout>
+                <CollectionView.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="4*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Text="#" VerticalOptions="Center" FontAttributes="Bold"/>
+                        <Label Grid.Column="1" Text="Product" VerticalOptions="Center" HorizontalOptions="End" Margin="0,0,10,0" FontAttributes="Bold"/>
+                    </Grid>
+                </CollectionView.Header>
                 <CollectionView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="m:ProductCategory">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="4*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="0" Text="{Binding Id}" VerticalOptions="Center"/>
-                            <Label Grid.Column="1" Text="{Binding Product.Name}" VerticalOptions="Center" HorizontalOptions="End" Margin="0,0,10,0"/>
+                            <Label Grid.Column="1" Text="{Binding Name}" VerticalOptions="Center" HorizontalOptions="End" Margin="0,0,10,0"/>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
@@ -45,13 +57,12 @@
                 <SearchBar x:Name="searchBar"  Placeholder="Zoek een product..." SearchCommand="{Binding SearchCommand}" SearchCommandParameter="{Binding Text, x:DataType='SearchBar', Source={x:Reference searchBar}}"/>
                 <CollectionView ItemsSource="{Binding AvailableProducts}" Margin="5" WidthRequest="300" HorizontalOptions="Start"
            SelectionMode="Single"
-           SelectionChangedCommand="{Binding AddProductCommand}"
-           SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}">
+           SelectedItem="{Binding SelectedProduct}">
                     <CollectionView.ItemsLayout>
                         <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
                     </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="m:Product">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="3*"/>
