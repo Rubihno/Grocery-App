@@ -1,4 +1,6 @@
-﻿using Grocery.Core.Interfaces.Services;
+﻿using CommunityToolkit.Mvvm.Input;
+using Grocery.App.Views;
+using Grocery.Core.Interfaces.Services;
 using Grocery.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Grocery.App.ViewModels
 {
-    public class CategoriesViewModel : BaseViewModel
+    public partial class CategoriesViewModel : BaseViewModel
     {
         private readonly ICategoryService _categoryService;
         public ObservableCollection<Category> Categories { get; set; }
@@ -19,6 +21,13 @@ namespace Grocery.App.ViewModels
             _categoryService = categoryService;
             Categories = [];
             _categoryService.GetAll().ForEach(item => Categories.Add(item));
+        }
+
+        [RelayCommand]
+        public async Task SelectCategory(Category category)
+        {
+            Dictionary<string, object> paramater = new() { { nameof(Category), category } };
+            await Shell.Current.GoToAsync($"{nameof(Views.ProductCategoriesView)}?Title={category.Name}", true, paramater);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Grocery.Core.Interfaces.Services;
+﻿using Grocery.Core.Interfaces.Repositories;
+using Grocery.Core.Interfaces.Services;
 using Grocery.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,9 @@ namespace Grocery.Core.Services
 {
     public class ProductCategoryService : IProductCategoryService
     {
-        private readonly IProductCategoryService _productCategories;
+        private readonly IProductCategoryRepository _productCategories;
 
-        public ProductCategoryService(IProductCategoryService productCategories)
+        public ProductCategoryService(IProductCategoryRepository productCategories)
         {
             _productCategories = productCategories;
         }

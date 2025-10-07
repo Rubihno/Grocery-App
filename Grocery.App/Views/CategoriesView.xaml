@@ -10,7 +10,10 @@
         </Grid>
     </Shell.TitleView>
     <Border Stroke="#C49B33" StrokeThickness="4" Padding="10" Margin="10">
-        <CollectionView ItemsSource="{Binding Categories}" Margin="20">
+        <CollectionView ItemsSource="{Binding Categories}" Margin="20"
+                        SelectionMode="Single"
+                        SelectionChangedCommand="{Binding SelectCategoryCommand}"
+                        SelectionChangedCommandParameter="{Binding SelectedItem, Source={RelativeSource Self}}">
             <CollectionView.ItemsLayout>
                 <LinearItemsLayout Orientation="Vertical" ItemSpacing="10"/>
             </CollectionView.ItemsLayout>
