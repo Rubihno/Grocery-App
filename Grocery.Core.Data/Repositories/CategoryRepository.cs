@@ -18,9 +18,5 @@ namespace Grocery.Core.Data.Repositories
         {
             throw new NotImplementedException();
         }
-        public void Add(Category category)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

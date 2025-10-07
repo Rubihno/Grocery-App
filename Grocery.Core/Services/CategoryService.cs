@@ -26,9 +26,5 @@ namespace Grocery.Core.Services
         {
             throw new NotImplementedException();
         }
-        public void Add(Category category)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
