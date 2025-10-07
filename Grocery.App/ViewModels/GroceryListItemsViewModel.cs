@@ -124,11 +124,17 @@ namespace Grocery.App.ViewModels
             GroceryListItem? item = MyGroceryListItems.FirstOrDefault(x => x.ProductId == productId);
             if (item == null) return;
             if (item.Amount >= item.Product.Stock) return;
+
             item.Amount++;
             _groceryListItemsService.Update(item);
             item.Product.Stock--;
             _productService.Update(item.Product);
-            OnGroceryListChanged(GroceryList);
+
+            int index = MyGroceryListItems.IndexOf(item);
+            if (index != -1)
+            {
+                MyGroceryListItems[index] = item;
+            }
         }
 
         [RelayCommand]
@@ -137,11 +143,14 @@ namespace Grocery.App.ViewModels
             GroceryListItem? item = MyGroceryListItems.FirstOrDefault(x => x.ProductId == productId);
             if (item == null) return;
             if (item.Amount <= 0) return;
+
             item.Amount--;
             _groceryListItemsService.Update(item);
             item.Product.Stock++;
             _productService.Update(item.Product);
-            OnGroceryListChanged(GroceryList);
+
+            int index = MyGroceryListItems.IndexOf(item);
+            MyGroceryListItems[index] = item;
         }
 
     }
