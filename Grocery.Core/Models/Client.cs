@@ -1,4 +1,6 @@
 ﻿
+using Grocery.Core.Enums;
+
 namespace Grocery.Core.Models
 {
     public partial class Client : Model
