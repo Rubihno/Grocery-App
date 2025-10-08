@@ -6,11 +6,14 @@ namespace Grocery.App.ViewModels
 {
     public class ProductViewModel : BaseViewModel
     {
+        private readonly IProductService _productService;
         public ObservableCollection<Product> Products { get; set; }
 
         public ProductViewModel(IProductService productService)
         {
-            Products = new(productService.GetAll());
+            _productService = productService;
+            Products = [];
+            foreach (Product p in _productService.GetAll()) Products.Add(p);
         }
 
     }

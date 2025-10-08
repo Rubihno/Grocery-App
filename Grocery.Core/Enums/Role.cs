@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Grocery.Core.Models
+namespace Grocery.Core.Enums
 {
     public enum Role
     {

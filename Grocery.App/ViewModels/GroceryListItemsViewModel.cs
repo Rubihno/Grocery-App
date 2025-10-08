@@ -89,27 +89,15 @@ namespace Grocery.App.ViewModels
         [RelayCommand]
         public void Search(string text)
         {
-            bool matchFound = false;
-            List<Product> productMatchList = new List<Product>();
-
             GetAvailableProducts();
 
-            foreach (Product product in AvailableProducts)
-            {
-                if (product.Name.ToLower().Contains(text.ToLower()))
-                {
-                    productMatchList.Add(product);
-                    matchFound = true;
-                }
-            }
+            List<Product> productMatchList = AvailableProducts.Where(p => p.Name.Contains(text, StringComparison.OrdinalIgnoreCase)).ToList();
+            bool matchFound = productMatchList.Any();
 
             if (matchFound)
             {
                 AvailableProducts.Clear();
-                foreach (Product product in productMatchList)
-                {
-                    AvailableProducts.Add(product);
-                }
+                productMatchList.ForEach(item => AvailableProducts.Add(item));
             }
             else if (text != string.Empty && !matchFound)
             {
@@ -124,11 +112,17 @@ namespace Grocery.App.ViewModels
             GroceryListItem? item = MyGroceryListItems.FirstOrDefault(x => x.ProductId == productId);
             if (item == null) return;
             if (item.Amount >= item.Product.Stock) return;
+
             item.Amount++;
             _groceryListItemsService.Update(item);
             item.Product.Stock--;
             _productService.Update(item.Product);
-            OnGroceryListChanged(GroceryList);
+
+            int index = MyGroceryListItems.IndexOf(item);
+            if (index != -1)
+            {
+                MyGroceryListItems[index] = item;
+            }
         }
 
         [RelayCommand]
@@ -137,11 +131,14 @@ namespace Grocery.App.ViewModels
             GroceryListItem? item = MyGroceryListItems.FirstOrDefault(x => x.ProductId == productId);
             if (item == null) return;
             if (item.Amount <= 0) return;
+
             item.Amount--;
             _groceryListItemsService.Update(item);
             item.Product.Stock++;
             _productService.Update(item.Product);
-            OnGroceryListChanged(GroceryList);
+
+            int index = MyGroceryListItems.IndexOf(item);
+            MyGroceryListItems[index] = item;
         }
 
     }

@@ -3,19 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:m="clr-namespace:Grocery.Core.Models;assembly=Grocery.Core"
              xmlns:vm="clr-namespace:Grocery.App.ViewModels"
-             x:Class="Grocery.App.Views.GroceryListItemsView"
-             x:DataType="vm:GroceryListItemsViewModel"
-             Title="GroceryListItemsView"
-             x:Name="ViewModel">
-
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Wijzig kleur" Command="{Binding ChangeColorCommand}" IconImageSource="{FontImage Glyph='&#xf30c;', Color=Black, Size=22}" />
-        <ToolbarItem Text="Deel boodschappenlijst" Command="{Binding ShareGroceryListCommand}" IconImageSource="{FontImage Glyph='&#xf30c;', Color=Black, Size=22}" />
-    </ContentPage.ToolbarItems>
-    
+             x:Class="Grocery.App.Views.ProductCategoriesView"
+             x:DataType="vm:ProductCategoriesViewModel"
+             Title="ProductCategoriesView">
     <Shell.TitleView>
         <Grid>
-            <Label Text="{Binding GroceryList.Name}" FontSize="Large" HorizontalOptions="Center" VerticalOptions="Center" />
+            <Label Text="{Binding Category.Name}" FontSize="Large" HorizontalOptions="Center"/>
         </Grid>
     </Shell.TitleView>
 
@@ -25,34 +18,34 @@
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         <Border Grid.Column="0" Stroke="#C49B33" StrokeThickness="4" Padding="10" Margin="10" HorizontalOptions="Center">
-            <CollectionView ItemsSource="{Binding MyGroceryListItems}" Margin="20" HorizontalOptions="Center" EmptyView="De boodschappenlijst is nog leeg. Voeg eerst boodschappen toe!">
+            <CollectionView ItemsSource="{Binding selectedProductCategories}" Margin="20" 
+                            HorizontalOptions="Center" 
+                            EmptyView="De categorie is nog leeg. Voeg eerst een product toe!"
+                            SelectionMode="Single"
+                            SelectionChangedCommand="{Binding RemoveProductCommand}"
+                            SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}">
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
                 </CollectionView.ItemsLayout>
-
+                <CollectionView.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="4*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Text="#" VerticalOptions="Center" FontAttributes="Bold"/>
+                        <Label Grid.Column="1" Text="Product" VerticalOptions="Center" HorizontalOptions="End" Margin="0,0,10,0" FontAttributes="Bold"/>
+                    </Grid>
+                </CollectionView.Header>
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="m:GroceryListItem">
+                    <DataTemplate x:DataType="m:ProductCategory">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="4*"/>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="20"/>
-                                <ColumnDefinition Width="20"/>
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Text="{Binding Product.Name}" VerticalOptions="Center"/>
-                            <Label Grid.Column="1" Text="{Binding Amount}" VerticalOptions="Center" HorizontalOptions="End" Margin="0,0,10,0"/>
-                            <Grid Grid.Column="2">
-                                <Image Source="plus.png" WidthRequest="15" HeightRequest="15"/>
-                                <Grid.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GroceryListItemsViewModel}}, Path=IncreaseAmountCommand}" CommandParameter="{Binding ProductId}" />
-                                </Grid.GestureRecognizers>
-                            </Grid>
-                            <Grid Grid.Column="3">
-                                <Image Source="min.png" WidthRequest="15" HeightRequest="15"/>
-                                <Grid.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GroceryListItemsViewModel}}, Path=DecreaseAmountCommand}" CommandParameter="{Binding ProductId}" />
-                                </Grid.GestureRecognizers>
-                            </Grid>
+                            <Label Grid.Column="0" Text="{Binding Id}" VerticalOptions="Center"/>
+                            <Label Grid.Column="1" Text="{Binding Name}" VerticalOptions="Center" HorizontalOptions="End" Margin="0,0,10,0"/>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
@@ -63,9 +56,8 @@
             <StackLayout>
                 <SearchBar x:Name="searchBar"  Placeholder="Zoek een product..." SearchCommand="{Binding SearchCommand}" SearchCommandParameter="{Binding Text, x:DataType='SearchBar', Source={x:Reference searchBar}}"/>
                 <CollectionView ItemsSource="{Binding AvailableProducts}" Margin="5" WidthRequest="300" HorizontalOptions="Start"
-            SelectionMode="Single"
-            SelectionChangedCommand="{Binding AddProductCommand}"
-            SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}">
+           SelectionMode="Single"
+           SelectedItem="{Binding SelectedProduct}">
                     <CollectionView.ItemsLayout>
                         <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
                     </CollectionView.ItemsLayout>
@@ -85,12 +77,11 @@
                         <ContentView>
                             <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
                                 <Label Text="Er zijn geen producten meer om toe te voegen" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
-                            </VerticalStackLayout> 
+                            </VerticalStackLayout>
                         </ContentView>
                     </CollectionView.EmptyView>
                 </CollectionView>
             </StackLayout>
         </Border>
-        <Label Grid.Row="0" Grid.Column="0" HorizontalOptions="Center" x:Name="Message" Text="{Binding MyMessage}" TextColor="Red" Margin="30,0,0,10"/>
     </Grid>
 </ContentPage>
