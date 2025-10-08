@@ -14,7 +14,8 @@ namespace Grocery.Core.Models
         {
             Stock = stock;
             ShelfLife = shelfLife;
-            Price = price;
+            if (price < 0) Price = 0;
+            else Price = price;
         }
         public override string? ToString()
         {
