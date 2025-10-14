@@ -59,8 +59,19 @@ namespace Grocery.App.ViewModels
                 {
                     _validationService.ClearValidationCheckList();
                     Product product = new(0, Name, Stock.Value, Price.Value, DateOnly.FromDateTime(ShelfLife));
-                    _productService.Add(product);
-                    await Shell.Current.GoToAsync(nameof(ProductView));
+                    Product result = _productService.Add(product);
+
+                    if (result.Id != 0)
+                    {
+                        await Shell.Current.DisplayAlert("Success", "Product succesvol toegevoegd!", "OK");
+                        await Shell.Current.GoToAsync(nameof(ProductView));
+                    }
+                    else
+                    {
+                        await Shell.Current.DisplayAlert("Fout", "Kon het product niet toevoegen!", "OK");
+                        await Shell.Current.GoToAsync(nameof(ProductView));
+                    }
+
                 }
             }
         }

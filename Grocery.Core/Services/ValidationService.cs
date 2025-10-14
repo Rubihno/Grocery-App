@@ -123,18 +123,18 @@ namespace Grocery.Core.Services
             if (!price.ToString().Contains(","))
             {
                 PriceFailMessage = "Prijs fout ingevoerd, gebruik een komma: 3,99";
-                validationList.Add(true);
-                return true;
+                validationList.Add(false);
+                return false;
             }
             else if (price.Scale != 2)
             {
                 PriceFailMessage = "Prijs beschikt niet over 2 decimalen achter de komma";
-                validationList.Add(true);
-                return true;
+                validationList.Add(false);
+                return false;
             }
             PriceFailMessage = string.Empty;
-            validationList.Add(false);
-            return false;
+            validationList.Add(true);
+            return true;
         }
 
         public bool DateValidation(DateTime date)
@@ -142,12 +142,12 @@ namespace Grocery.Core.Services
             if (date.Date <= DateTime.Today)
             {
                 DateFailMessage = "Ingevoerde datum is vandaag of verlopen!";
-                validationList.Add(true);
-                return true;
+                validationList.Add(false);
+                return false;
             }
             DateFailMessage = string.Empty;
-            validationList.Add(false);
-            return false;
+            validationList.Add(true);
+            return true;
         }
 
         public List<bool> GetValidationCheckList()

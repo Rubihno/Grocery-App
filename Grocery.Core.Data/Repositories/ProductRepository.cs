@@ -76,22 +76,30 @@ namespace Grocery.Core.Data.Repositories
 
         public Product Add(Product item)
         {
-            int recordsAffected;
-            string insertQuery = $"INSERT INTO Products(Name, Stock, Price, Date) VALUES(@Name, @Stock, @Price, @Date) Returning RowId";
-            OpenConnection();
-
-            using (SqliteCommand command = new(insertQuery, Connection))
+            try
             {
-                command.Parameters.AddWithValue("Name", item.Name);
-                command.Parameters.AddWithValue("Stock", item.Stock);
-                command.Parameters.AddWithValue("Price", item.Price);
-                command.Parameters.AddWithValue("Date", item.ShelfLife);
+                int recordsAffected;
+                string insertQuery = $"INSERT INTO Products(Name, Stock, Price, Date) VALUES(@Name, @Stock, @Price, @Date) Returning RowId";
+                OpenConnection();
 
-                // recordsAffected = command.ExecuteNonQuery();
-                item.Id = Convert.ToInt32(command.ExecuteScalar());
+                using (SqliteCommand command = new(insertQuery, Connection))
+                {
+                    command.Parameters.AddWithValue("Name", item.Name);
+                    command.Parameters.AddWithValue("Stock", item.Stock);
+                    command.Parameters.AddWithValue("Price", item.Price);
+                    command.Parameters.AddWithValue("Date", item.ShelfLife);
+
+                    // recordsAffected = command.ExecuteNonQuery();
+                    item.Id = Convert.ToInt32(command.ExecuteScalar());
+                }
+                CloseConnection();
+                return item;
             }
-            CloseConnection();
-            return item;
+            catch
+            {
+                CloseConnection();
+                return new Product(0, string.Empty, 0, 0m, DateOnly.MinValue);
+            }
         }
 
         public Product? Delete(Product item)
