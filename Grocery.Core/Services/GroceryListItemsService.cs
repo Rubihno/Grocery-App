@@ -91,7 +91,7 @@ namespace Grocery.Core.Services
         {
             foreach (GroceryListItem g in groceryListItems)
             {
-                g.Product = _productRepository.Get(g.ProductId) ?? new(0, "", 0);
+                g.Product = _productRepository.Get(g.ProductId) ?? new(0, "", 0, 0.00m);
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using Grocery.Core.Data.Helpers;
 using Grocery.Core.Interfaces.Repositories;
 using Grocery.Core.Models;
+using Grocery.Core.Services;
 using Microsoft.Data.Sqlite;
 
 namespace Grocery.Core.Data.Repositories
@@ -22,12 +23,17 @@ namespace Grocery.Core.Data.Repositories
                                           @"INSERT OR IGNORE INTO GroceryList(Name, Date, Color, ClientId) VALUES('Kerstboodschappen', '2024-12-07', '#626262', 1)",
                                           @"INSERT OR IGNORE INTO GroceryList(Name, Date, Color, ClientId) VALUES('Weekend boodschappen', '2024-11-30', '#003300', 1)"];
             InsertMultipleWithTransaction(insertQueries);
+            groceryLists = new List<GroceryList>();
             GetAll();
         }
 
         public List<GroceryList> GetAll()
         {
-            groceryLists.Clear();
+            if (groceryLists != null) 
+            {
+                groceryLists.Clear();
+            }
+            
             string selectQuery = "SELECT Id, Name, date(Date), Color, ClientId FROM GroceryList";
             OpenConnection();
             using (SqliteCommand command = new(selectQuery, Connection))

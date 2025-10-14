@@ -15,12 +15,13 @@
 	  <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
 	  <PackageReference Include="System.Text.Json" Version="8.0.6" />
 	</ItemGroup>
-	<ItemGroup>
-		<Page Include="appsettings.json">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Page>
-	</ItemGroup>
 
+	<ItemGroup>
+		<MauiAsset Include="appsettings.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</MauiAsset>
+	</ItemGroup>
+	
 	<ItemGroup>
 		<ProjectReference Include="..\Grocery.Core\Grocery.Core.csproj" />
 	</ItemGroup>
