@@ -7,10 +7,15 @@
              Title="Product aanmaken">
     <StackLayout VerticalOptions="Center" Margin="10">
         <Label Text="Product aanmaken" FontAttributes="Bold" FontSize="24" HorizontalOptions="Center" />
-        <Entry Placeholder="Naam" Text="{Binding name}" Margin="10" HorizontalTextAlignment="Center"/>
-        <Entry Placeholder="Voorraad" Text="{Binding stock}" Margin="10" HorizontalTextAlignment="Center"/>
-        <Entry Placeholder="Prijs" Text="{Binding price}" Margin="10" HorizontalTextAlignment="Center"/>
-        <DatePicker Date="{Binding shelfLife}" Margin="10" HorizontalOptions="Center"/>
+        <Entry Placeholder="Naam" Text="{Binding Name}" Margin="10" HorizontalTextAlignment="Center"/>
+        <Label Text="{Binding NameErrorMessage}" TextColor="Red" HorizontalOptions="Center"/>
+        <Entry Placeholder="Voorraad" Text="{Binding Stock}" Margin="10" HorizontalTextAlignment="Center"/>
+        <Entry Placeholder="Prijs" Text="{Binding Price}" Margin="10" HorizontalTextAlignment="Center"/>
+        <Label Text="{Binding PriceFormatErrorMessage}" TextColor="Red" HorizontalOptions="Center"/>
+        <DatePicker Date="{Binding ShelfLife}" Margin="10" HorizontalOptions="Center"
+                    MaximumDate="1-1-2050" MinimumDate="1-1-2025"/>
+        <Label Text="{Binding DateErrorMessage}" TextColor="Red" HorizontalOptions="Center"/>
         <Button Text="Bevestigen" CornerRadius="10" Command="{Binding CreateProductCommand}" Margin="10"/>
+        <Label Text="{Binding EmptyFieldsErrorMessage}" TextColor="Red" HorizontalOptions="Center"/>
     </StackLayout>
 </ContentPage>

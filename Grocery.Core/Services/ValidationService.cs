@@ -15,7 +15,11 @@ namespace Grocery.Core.Services
         public string EmailFailMessage { get; set; }
         public string NameFailMessage { get; set; }
         public string PasswordFailMessage { get; set; }
-        public string emptyFieldMessage { get; set; }
+        public string EmptyFieldMessage { get; set; }
+        public string PriceFailMessage { get; set; }
+        public string DateFailMessage { get; set; }
+
+        public List<bool> validationList { get; set; } = [];
 
         public bool EmailValidation(string email)
         {
@@ -51,6 +55,31 @@ namespace Grocery.Core.Services
             NameFailMessage = string.Empty;
             return true;
         }
+
+        public bool NameValidation(string name, List<Product> productList)
+        {
+            if (name.Length < 3)
+            {
+                NameFailMessage = "Productnaam bevat minder dan 3 karakters!";
+                validationList.Add(false);
+                return false;
+            }
+
+            foreach (Product product in productList)
+            {
+                if (product.Name == name)
+                {
+                    NameFailMessage = "Productnaam bestaat al!";
+                    validationList.Add(false);
+                    return false;
+                }
+            }
+
+            NameFailMessage = string.Empty;
+            validationList.Add(true);
+            return true;
+        }
+
         public bool PasswordValidation(string password, string passwordConfirmation)
         {
             if (password == passwordConfirmation)
@@ -67,15 +96,68 @@ namespace Grocery.Core.Services
             return false;
         }
 
-        public bool EmptyFieldValidation(string email, string name, string password, string passwordConfirmation)
+        public virtual bool EmptyFieldValidation(string email, string name, string password, string passwordConfirmation)
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(name) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(passwordConfirmation))
             {
-                emptyFieldMessage = "1 of meerdere velden zijn leeg!";
+                EmptyFieldMessage = "1 of meerdere velden zijn leeg!";
                 return true;
             }
-            emptyFieldMessage = string.Empty;
+            EmptyFieldMessage = string.Empty;
             return false;
+        }
+
+        public bool EmptyFieldValidation(string name, int? stock, decimal? price)
+        {
+            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(stock.ToString()) || string.IsNullOrEmpty(price.ToString()))
+            {
+                EmptyFieldMessage = "1 of meerdere velden zijn leeg!";
+                return true;
+            }
+            EmptyFieldMessage = string.Empty;
+            return false;
+        }
+
+        public bool PriceValidation(decimal price)
+        {
+            if (!price.ToString().Contains(","))
+            {
+                PriceFailMessage = "Prijs fout ingevoerd, gebruik een komma: 3,99";
+                validationList.Add(true);
+                return true;
+            }
+            else if (price.Scale != 2)
+            {
+                PriceFailMessage = "Prijs beschikt niet over 2 decimalen achter de komma";
+                validationList.Add(true);
+                return true;
+            }
+            PriceFailMessage = string.Empty;
+            validationList.Add(false);
+            return false;
+        }
+
+        public bool DateValidation(DateTime date)
+        {
+            if (date.Date <= DateTime.Today)
+            {
+                DateFailMessage = "Ingevoerde datum is vandaag of verlopen!";
+                validationList.Add(true);
+                return true;
+            }
+            DateFailMessage = string.Empty;
+            validationList.Add(false);
+            return false;
+        }
+
+        public List<bool> GetValidationCheckList()
+        {
+            return validationList;
+        }
+
+        public void ClearValidationCheckList()
+        {
+            validationList.Clear();
         }
     }
 }

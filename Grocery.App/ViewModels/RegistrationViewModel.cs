@@ -59,11 +59,11 @@ namespace Grocery.App.ViewModels
 
             if (veldenLeeg)
             {
-                EmptyFieldMessage = _validatieService.emptyFieldMessage;
+                EmptyFieldMessage = _validatieService.EmptyFieldMessage;
             }
             else
             {
-                EmptyFieldMessage = _validatieService.emptyFieldMessage;
+                EmptyFieldMessage = _validatieService.EmptyFieldMessage;
 
                 bool emailResult = _validatieService.EmailValidation(EmailAddress);
                 EmailValidationMessage = _validatieService.EmailFailMessage;

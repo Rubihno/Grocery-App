@@ -1,17 +1,21 @@
 using Grocery.App.ViewModels;
+using Grocery.Core.Enums;
+using Grocery.Core.Models;
 
 namespace Grocery.App.Views;
 
 public partial class ProductView : ContentPage
 {
-	public ProductView(ProductViewModel viewModel)
+	private readonly GlobalViewModel _globalViewModel;
+	public ProductView(ProductViewModel viewModel, GlobalViewModel globalViewModel)
 	{
 		InitializeComponent();
 		BindingContext = viewModel;
+		_globalViewModel = globalViewModel;
 	}
 
     private async void OnCreateProductClicked(object? sender, EventArgs e)
     {
-		await Shell.Current.GoToAsync(nameof(NewProductView));
+		if (_globalViewModel.Client.currentRole == Role.Admin) await Shell.Current.GoToAsync(nameof(NewProductView));
     }
 }

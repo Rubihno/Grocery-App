@@ -54,7 +54,7 @@ namespace Grocery.App.Tests
             bool legeVeldenCheck = _validatieService.EmptyFieldValidation(email, gebruikersnaam, wachtwoord, wachtwoordBevestiging); ;
 
             Assert.IsFalse(legeVeldenCheck);
-            Assert.AreEqual(string.Empty, _validatieService.emptyFieldMessage);
+            Assert.AreEqual(string.Empty, _validatieService.EmptyFieldMessage);
         }
 
         [TestCase ("", "Ruben", "wachtwoord123", "wachtwoord123")]
@@ -64,7 +64,7 @@ namespace Grocery.App.Tests
             bool legeVeldenCheck = _validatieService.EmptyFieldValidation(email, gebruikersnaam, wachtwoord, wachtwoordBevestiging);
 
             Assert.IsTrue(legeVeldenCheck);
-            Assert.AreEqual("1 of meerdere velden zijn leeg!", _validatieService.emptyFieldMessage);
+            Assert.AreEqual("1 of meerdere velden zijn leeg!", _validatieService.EmptyFieldMessage);
         }
     }
 
