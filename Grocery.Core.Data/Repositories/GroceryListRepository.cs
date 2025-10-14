@@ -23,7 +23,7 @@ namespace Grocery.Core.Data.Repositories
                                           @"INSERT OR IGNORE INTO GroceryList(Name, Date, Color, ClientId) VALUES('Kerstboodschappen', '2024-12-07', '#626262', 1)",
                                           @"INSERT OR IGNORE INTO GroceryList(Name, Date, Color, ClientId) VALUES('Weekend boodschappen', '2024-11-30', '#003300', 1)"];
             InsertMultipleWithTransaction(insertQueries);
-            groceryLists = new List<GroceryList>();
+            groceryLists = new();
             GetAll();
         }
 
