@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Grocery.App.ViewModels" 
+             x:Class="Grocery.App.Views.NewProductView"
+             x:DataType="vm:NewProductViewModel"
+             Title="Product aanmaken">
+    <StackLayout VerticalOptions="Center" Margin="10">
+        <Label Text="Product aanmaken" FontAttributes="Bold" FontSize="24" HorizontalOptions="Center" />
+        <Entry Placeholder="Naam" Text="{Binding name}" Margin="10" HorizontalTextAlignment="Center"/>
+        <Entry Placeholder="Voorraad" Text="{Binding stock}" Margin="10" HorizontalTextAlignment="Center"/>
+        <Entry Placeholder="Prijs" Text="{Binding price}" Margin="10" HorizontalTextAlignment="Center"/>
+        <DatePicker Date="{Binding shelfLife}" Margin="10" HorizontalOptions="Center"/>
+        <Button Text="Bevestigen" CornerRadius="10" Command="{Binding CreateProductCommand}" Margin="10"/>
+    </StackLayout>
+</ContentPage>

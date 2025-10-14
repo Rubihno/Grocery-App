@@ -10,6 +10,9 @@
             <Label Text="Producten" FontSize="Large" HorizontalOptions="Center" VerticalOptions="Center" />
         </Grid>
     </Shell.TitleView>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Product aanmaken" Clicked="OnCreateProductClicked" />
+    </ContentPage.ToolbarItems>
 
     <Border Stroke="#C49B33" StrokeThickness="4" Padding="10" Margin="10" HorizontalOptions="Center">
         <CollectionView ItemsSource="{Binding Products}" Margin="20" HorizontalOptions="Center">
