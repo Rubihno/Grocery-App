@@ -21,6 +21,7 @@ namespace Grocery.App.ViewModels
         {
             _boughtProductsService = boughtProductsService;
             Products = new(productService.GetAll());
+            BoughtProductsList.Clear();
         }
 
         partial void OnSelectedProductChanged(Product? oldValue, Product newValue)

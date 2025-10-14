@@ -8,7 +8,7 @@ namespace Grocery.Core.Data.Repositories
 {
     public class GroceryListRepository : DatabaseConnection, IGroceryListRepository
     {
-        private readonly List<GroceryList> groceryLists;
+        private readonly List<GroceryList> groceryLists = [];
 
         public GroceryListRepository()
         { 
@@ -23,16 +23,12 @@ namespace Grocery.Core.Data.Repositories
                                           @"INSERT OR IGNORE INTO GroceryList(Name, Date, Color, ClientId) VALUES('Kerstboodschappen', '2024-12-07', '#626262', 1)",
                                           @"INSERT OR IGNORE INTO GroceryList(Name, Date, Color, ClientId) VALUES('Weekend boodschappen', '2024-11-30', '#003300', 1)"];
             InsertMultipleWithTransaction(insertQueries);
-            groceryLists = new();
             GetAll();
         }
 
         public List<GroceryList> GetAll()
         {
-            if (groceryLists != null) 
-            {
-                groceryLists.Clear();
-            }
+            groceryLists.Clear();
             
             string selectQuery = "SELECT Id, Name, date(Date), Color, ClientId FROM GroceryList";
             OpenConnection();
@@ -65,8 +61,7 @@ namespace Grocery.Core.Data.Repositories
                 command.Parameters.AddWithValue("Color", item.Color);
                 command.Parameters.AddWithValue("ClientId", item.ClientId);
 
-                //TODO: Check of dit niet voor errors/data problemen zorgt
-                recordsAffected = command.ExecuteNonQuery();
+                //recordsAffected = command.ExecuteNonQuery();
                 item.Id = Convert.ToInt32(command.ExecuteScalar());
             }
             CloseConnection();
