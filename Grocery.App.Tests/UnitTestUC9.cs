@@ -6,6 +6,7 @@ using Moq;
 using NUnit.Framework;
 using System.Runtime.CompilerServices;
 using Grocery.Core.Interfaces.Services;
+
 namespace Grocery.App.Tests
 {
     public class BaseViewModelTests

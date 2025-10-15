@@ -122,7 +122,7 @@ namespace Grocery.Core.Services
         {
             if (!price.ToString().Contains(","))
             {
-                PriceFailMessage = "Prijs fout ingevoerd, gebruik een komma: 3,99";
+                PriceFailMessage = $"Prijs fout ingevoerd, gebruik een komma, bijvoorbeeld: 2,99";
                 validationList.Add(false);
                 return false;
             }
