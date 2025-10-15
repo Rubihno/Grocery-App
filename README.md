@@ -1,54 +1,19 @@
-# GroceryApp sprint5 Studentversie  
-Dit is de startversie voor studenten voor sprint 5.  
- 
-## UC15 Toevoegen THT datum aan product 
-Is compleet.  
+# GroceryApp Sprint 6 Studentversie
+Dit is de startversie voor studenten van sprint 6.
 
-## UC14 Toevoegen prijzen:  
-- Prijs toevoegen aan product class en uitbreiden constructor chain.  
-- ProductRepository --> prijsveld vullen met waarden.  
-- ProductView uitbreiden met kolom voor de prijs (header en inhoud van de tabel).      
+## UC17 Boodschappenlijst in database
+Compleet uitgewerkt.
 
-## UC12 Productcategoriën toevoegen --> zelfstandig uitwerken:  
-Ontwerp:
->```mermaid
->classDiagram
->direction LR
->    class Product {
->	    +int Id
->	    +string Name
->	    +int Stock
->	    +DateOnly ShelfLife
->	    +Decimal Price
->   }
->    class ProductCategory {
->	    +int Id
->	    +string Name
->	    +int ProductId
->	    +int CategoryId
->    }
->    class Category {
->	    +int Id
->	    +string Name
->    }
->
->    Product "1" -- "*" ProductCategory
->    ProductCategory "*" -- "1" Category
-> ```
-Stappenplan:  
-- Maak class Category  
-- Maak class ProductCategory  
-- Maak Interface en Repository voor Category  
-- Maak Interface en Repository voor ProductCategory  
-- Maak Interface en Service voor Category  
-- Maak Interface en Service voor ProductCategory  
-- Registreer de gemaakte Repo's en services in MauiProgramm  
-- Maak CategoriesViewModel.  
-- Maak CategoriesView.  
-- Registreer De view en het ViewModel in MauiProgramm.  
-- Maak een menu entry in de tabbar in AppShell.xaml en registreer route in AppShell.xaml.cs  
-- Maak ProductCategoriesViewModel.  
-- Maak ProductCategoriesView.  
-- Registreer De view en het ViewModel in MauiProgramm.  
-- Zorg dat de ProductCategoriesView gestart kan worden na het klikken op een Category in CategoriesView  
-- Registreer route naar ProductCategoriesView in AppShell.xaml.cs  
+## UC18 BoodschappenlijstItems in database.
+- Gebruik het voorbeeld van UC17 om zelf de GroceryListItemsRepository tew ijzigen zodat boodschappenlijstitems uit de database komen.
+
+## UC19 Product in database en nieuw product aanmaken
+Zelfstandig uitwerken.
+- Volg UC17 om producten uit de database te kunnen halen.
+- De Add() functie in ProductService moet uitgewerkt zijn om nieuwe producten te kunnen aanmaken.
+- Maak een NewProductViewModel om het aanmaken van nieuwe producten te ondersteunen. Alleen gebruikers met de admin Role mogen nieuwe producten aanmaken.
+- Maak een NewProductView voor het invoerscherm.
+- Voeg een ToolbarItemn toe aan de ProductView, zodat vanuit dit scherm nieuwe producten kunnen worden aangemaakt.
+- Zorg ervoor dat als er een nieuw product is aangemaakt, deze meteen zichtbaar is in de Productlijst van de ProductView.
+- Denk aan de registratie van de View, ViewModel en registreren van de route naar NewProductView.
+

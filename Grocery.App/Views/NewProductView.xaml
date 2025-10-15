@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Grocery.App.ViewModels" 
+             x:Class="Grocery.App.Views.NewProductView"
+             x:DataType="vm:NewProductViewModel"
+             Title="Product aanmaken">
+    <StackLayout VerticalOptions="Center" Margin="10">
+        <Label Text="Product aanmaken" FontAttributes="Bold" FontSize="24" HorizontalOptions="Center" />
+        <Entry Placeholder="Naam" Text="{Binding Name}" Margin="10" HorizontalTextAlignment="Center"/>
+        <Label Text="{Binding NameErrorMessage}" TextColor="Red" HorizontalOptions="Center"/>
+        <Entry Placeholder="Voorraad" Text="{Binding Stock}" Margin="10" HorizontalTextAlignment="Center"/>
+        <Entry Placeholder="Prijs" Text="{Binding Price}" Margin="10" HorizontalTextAlignment="Center"/>
+        <Label Text="{Binding PriceFormatErrorMessage}" TextColor="Red" HorizontalOptions="Center"/>
+        <DatePicker Date="{Binding ShelfLife}" Margin="10" HorizontalOptions="Center"
+                    MaximumDate="1-1-2050" MinimumDate="1-1-2025"/>
+        <Label Text="{Binding DateErrorMessage}" TextColor="Red" HorizontalOptions="Center"/>
+        <Button Text="Bevestigen" CornerRadius="10" Command="{Binding CreateProductCommand}" Margin="10"/>
+        <Label Text="{Binding EmptyFieldsErrorMessage}" TextColor="Red" HorizontalOptions="Center"/>
+    </StackLayout>
+</ContentPage>

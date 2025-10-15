@@ -60,5 +60,11 @@ jobs:
       - name: Bouw Grocery.App
         run: dotnet build Grocery.App --configuration Release -f net8.0-windows10.0.19041.0 /p:RuntimeIdentifierOverride=win-x64
  
-      - name: Voer unit tests uit
-        run: dotnet test --configuration Release --no-restore --no-build --verbosity normal
+      - name: Voer unit tests uit en genereer test results
+        run: dotnet test --configuration Release --no-restore --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
+
+      - name: Test artifacts uploaden
+        uses: actions/upload-artifact@v4
+        with:
+          name: NUnit-Test-Results
+          path: '**/test-results.trx'

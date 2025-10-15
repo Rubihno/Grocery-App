@@ -1,4 +1,5 @@
-﻿using Grocery.App.Views;
+﻿using Grocery.App.ViewModels;
+using Grocery.App.Views;
 
 namespace Grocery.App
 {
@@ -14,6 +15,7 @@ namespace Grocery.App
             Routing.RegisterRoute(nameof(BestSellingProductsView), typeof(BestSellingProductsView));
             Routing.RegisterRoute(nameof(BoughtProductsView), typeof(BoughtProductsView));
             Routing.RegisterRoute(nameof(ProductCategoriesView), typeof(ProductCategoriesView));
+            Routing.RegisterRoute(nameof(NewProductView), typeof(NewProductView));
         }
     }
 }
