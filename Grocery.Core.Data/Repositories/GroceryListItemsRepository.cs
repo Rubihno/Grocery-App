@@ -32,7 +32,8 @@ namespace Grocery.Core.Data.Repositories
             
             /* 
                Zonder RowInDb uit te voeren wordt bij elke start van de app 
-               elke GroceryListItem in insertQueries opnieuw toegevoegd.
+               elke GroceryListItem in insertQueries opnieuw toegevoegd zonder de vorige
+               rows te vervangen.
             */
             bool rowInDb = RowInDb();
             if (!rowInDb) InsertMultipleWithTransaction(insertQueries);
@@ -145,7 +146,8 @@ namespace Grocery.Core.Data.Repositories
                 command.Parameters.AddWithValue("ProductId", item.ProductId);
                 command.Parameters.AddWithValue("Amount", item.Amount);
 
-                recordsAffected = command.ExecuteNonQuery();
+                //recordsAffected = command.ExecuteNonQuery();
+                item.Id = Convert.ToInt32(command.ExecuteScalar());
             }
             CloseConnection();
             return item;

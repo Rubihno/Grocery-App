@@ -1,4 +1,5 @@
 ﻿
+using CommunityToolkit.Mvvm.ComponentModel;
 using Grocery.Core.Enums;
 
 namespace Grocery.Core.Models
