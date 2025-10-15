@@ -64,7 +64,7 @@ jobs:
         run: dotnet test --configuration Release --no-restore --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
 
       - name: Test artifacts uploaden
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: NUnit-Test-Results
           path: '**/test-results.trx'
