@@ -50,5 +50,11 @@ namespace Grocery.App.ViewModels
                 Shell.Current.GoToAsync($"{nameof(BoughtProductsView)}");
             }
         }
+
+        [RelayCommand]
+        public async void ShowNewGroceryListView()
+        {
+            Shell.Current.GoToAsync(nameof(NewGroceryListView));
+        }
     }
 }

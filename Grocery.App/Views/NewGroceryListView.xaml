@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Grocery.App.ViewModels"
+             x:DataType="vm:NewGroceryListViewModel"
+             x:Class="Grocery.App.Views.NewGroceryListView"
+             Title="Boodschappenlijst aanmaken">
+    <StackLayout VerticalOptions="Center" Margin="10">
+        <Label Text="Boodschappenlijst aanmaken" FontAttributes="Bold" FontSize="24" HorizontalOptions="Center" />
+        <Entry Placeholder="Naam" Text="{Binding Name}" Margin="10" HorizontalTextAlignment="Center"/>
+        <Label Text="{Binding NameErrorMessage}" TextColor="Red" HorizontalOptions="Center"/>
+        <Entry Placeholder="Color Hex Code" Text="{Binding ColorCode}" Margin="10" HorizontalTextAlignment="Center"/>
+        <Label Text="{Binding ColorCodeErrorMessage}" TextColor="Red" HorizontalOptions="Center"/>
+        <Button Text="Bevestiging" CornerRadius="10" Command="{Binding CreateGroceryListCommand}" Margin="10"/>
+    </StackLayout>
+</ContentPage>
