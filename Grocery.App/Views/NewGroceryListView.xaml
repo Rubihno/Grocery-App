@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:Grocery.App.ViewModels"
+             xmlns:controls="clr-namespace:Maui.ColorPicker;assembly=Maui.ColorPicker"
              x:DataType="vm:NewGroceryListViewModel"
              x:Class="Grocery.App.Views.NewGroceryListView"
              Title="Boodschappenlijst aanmaken">
@@ -9,7 +10,15 @@
         <Label Text="Boodschappenlijst aanmaken" FontAttributes="Bold" FontSize="24" HorizontalOptions="Center" />
         <Entry Placeholder="Naam" Text="{Binding Name}" Margin="10" HorizontalTextAlignment="Center"/>
         <Label Text="{Binding NameErrorMessage}" TextColor="Red" HorizontalOptions="Center"/>
-        <Entry Placeholder="Color Hex Code" Text="{Binding ColorCode}" Margin="10" HorizontalTextAlignment="Center"/>
+        <controls:ColorPicker 
+            x:Name="ColorPicker"
+            WidthRequest="200"
+            HeightRequest="200"
+            ColorFlowDirection="Horizontal"
+            ColorSpectrumStyle="ShadeToHueStyle"
+            PointerRingBorderUnits="0.3"
+            PointerRingDiameterUnits="0.7"
+            PickedColor="{Binding Color, Mode=TwoWay}"/>
         <Label Text="{Binding ColorCodeErrorMessage}" TextColor="Red" HorizontalOptions="Center"/>
         <Button Text="Bevestiging" CornerRadius="10" Command="{Binding CreateGroceryListCommand}" Margin="10"/>
     </StackLayout>

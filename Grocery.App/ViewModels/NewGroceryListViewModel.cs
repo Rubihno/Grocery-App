@@ -2,6 +2,8 @@
 using CommunityToolkit.Mvvm.Input;
 using Grocery.Core.Interfaces.Services;
 using Grocery.Core.Models;
+using System.Diagnostics;
+using Grocery.App.Views;
 namespace Grocery.App.ViewModels
 {
     public partial class NewGroceryListViewModel : BaseViewModel
@@ -16,7 +18,7 @@ namespace Grocery.App.ViewModels
         }
 
         public string Name { get; set; }
-        public string ColorCode { get; set; }
+        public Color Color { get; set; }
 
         [ObservableProperty]
         private string nameErrorMessage;
@@ -28,10 +30,13 @@ namespace Grocery.App.ViewModels
         {
             int groceryListCount = _groceryListService.GetAll().Count();
             DateOnly currentDate = DateOnly.FromDateTime(DateTime.Today);
+            Debug.WriteLine($"Het niet id is: {groceryListCount + 1}");
 
             // TODO: Validatie checks toevoegen om foute/geen data te voorkomen
-            GroceryList newGroceryList = new(groceryListCount + 1, Name, currentDate, ColorCode, _client.Id);
+            GroceryList newGroceryList = new(groceryListCount + 1, Name, currentDate, Color.ToHex(), _client.Id);
             _groceryListService.Add(newGroceryList);
+
+            Shell.Current.GoToAsync(nameof(GroceryListsView));
         }
     }
 }
