@@ -79,6 +79,29 @@ namespace Grocery.Core.Services
             validationList.Add(true);
             return true;
         }
+        public bool NameValidation(string name, List<GroceryList> groceryLists)
+        {
+            if (name.Length < 3)
+            {
+                NameFailMessage = "Lijstnaam bevat minder dan 3 karakters!";
+                validationList.Add(false);
+                return false;
+            }
+
+            foreach (GroceryList item in groceryLists)
+            {
+                if (item.Name == name)
+                {
+                    NameFailMessage = "Lijstnaam bestaat al!";
+                    validationList.Add(false);
+                    return false;
+                }
+            }
+
+            NameFailMessage = string.Empty;
+            validationList.Add(true);
+            return true;
+        }
 
         public bool PasswordValidation(string password, string passwordConfirmation)
         {
@@ -112,6 +135,16 @@ namespace Grocery.Core.Services
             if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(stock.ToString()) || string.IsNullOrEmpty(price.ToString()))
             {
                 EmptyFieldMessage = "1 of meerdere velden zijn leeg!";
+                return true;
+            }
+            EmptyFieldMessage = string.Empty;
+            return false;
+        }
+        public bool EmptyFieldValidation(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                EmptyFieldMessage = "Vul een naam voor de boodschappenlijst in!";
                 return true;
             }
             EmptyFieldMessage = string.Empty;

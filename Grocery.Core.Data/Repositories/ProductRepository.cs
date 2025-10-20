@@ -74,7 +74,7 @@ namespace Grocery.Core.Data.Repositories
             return p;
         }
 
-        public Product Add(Product item)
+        public Product? Add(Product? item)
         {
             try
             {
@@ -92,13 +92,21 @@ namespace Grocery.Core.Data.Repositories
                     // recordsAffected = command.ExecuteNonQuery();
                     item.Id = Convert.ToInt32(command.ExecuteScalar());
                 }
-                CloseConnection();
                 return item;
             }
-            catch
+            catch (SqliteException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Sqlite error while adding product: {ex.Message}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Unexpected error while adding product: {ex.Message}");
+                return null;
+            }
+            finally
             {
                 CloseConnection();
-                return new Product(0, string.Empty, 0, 0m, DateOnly.MinValue);
             }
         }
 

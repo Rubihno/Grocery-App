@@ -32,21 +32,18 @@ namespace Grocery.App.ViewModels
             _validationService = validationService;
         }
 
-        [RelayCommand]
-        private async Task CreateProduct()
+        public bool ValidationChecks()
         {
-            List<Product> productList = _productService.GetAll();
-            List<bool> validationChecks = [];
-
             bool emptyFieldsResult = _validationService.EmptyFieldValidation(Name, Stock, Price);
-            
+
             if (emptyFieldsResult)
             {
                 EmptyFieldsErrorMessage = _validationService.EmptyFieldMessage;
+                return false;
             }
             else
             {
-                _validationService.NameValidation(Name, productList);
+                _validationService.NameValidation(Name, _productService.GetAll());
                 NameErrorMessage = _validationService.NameFailMessage;
 
                 _validationService.PriceValidation(Price.Value);
@@ -55,23 +52,30 @@ namespace Grocery.App.ViewModels
                 _validationService.DateValidation(ShelfLife);
                 DateErrorMessage = _validationService.DateFailMessage;
 
-                if (_validationService.GetValidationCheckList().All(check => check))
+                bool result = _validationService.GetValidationCheckList().All(check => check);
+
+                return result;
+            }
+        }
+
+        [RelayCommand]
+        async Task CreateProduct()
+        {
+            if (ValidationChecks())
+            {
+                _validationService.ClearValidationCheckList();
+                Product? product = new(0, Name, Stock.Value, Price.Value, DateOnly.FromDateTime(ShelfLife));
+                Product? result = _productService.Add(product);
+
+                if (result == null)
                 {
-                    _validationService.ClearValidationCheckList();
-                    Product product = new(0, Name, Stock.Value, Price.Value, DateOnly.FromDateTime(ShelfLife));
-                    Product result = _productService.Add(product);
-
-                    if (result.Id != 0)
-                    {
-                        await Shell.Current.DisplayAlert("Success", "Product succesvol toegevoegd!", "OK");
-                        await Shell.Current.GoToAsync(nameof(ProductView));
-                    }
-                    else
-                    {
-                        await Shell.Current.DisplayAlert("Fout", "Kon het product niet toevoegen!", "OK");
-                        await Shell.Current.GoToAsync(nameof(ProductView));
-                    }
-
+                    await Shell.Current.DisplayAlert("Fout", "Het toevoegen van het product is mislukt", "OK");
+                    return;
+                }
+                else
+                {
+                    await Shell.Current.DisplayAlert("Succes", "Het product is succesvol toegevoegd!", "OK");
+                    await Shell.Current.GoToAsync(nameof(ProductView));
                 }
             }
         }

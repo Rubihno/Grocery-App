@@ -9,11 +9,13 @@ namespace Grocery.App.ViewModels
     public partial class NewGroceryListViewModel : BaseViewModel
     {
         private readonly IGroceryListService _groceryListService;
+        private readonly IValidationService _validationService;
         private readonly Client _client;
 
-        public NewGroceryListViewModel(IGroceryListService groceryListService, GlobalViewModel global)
+        public NewGroceryListViewModel(IGroceryListService groceryListService, IValidationService validationService, GlobalViewModel global)
         {
             _groceryListService = groceryListService;
+            _validationService = validationService;
             _client = global.Client;
         }
 
@@ -22,8 +24,21 @@ namespace Grocery.App.ViewModels
 
         [ObservableProperty]
         private string nameErrorMessage;
-        [ObservableProperty]
-        private string colorCodeErrorMessage;
+
+        public bool ValidationCheck()
+        {
+            if (_validationService.EmptyFieldValidation(Name))
+            {
+                NameErrorMessage = _validationService.EmptyFieldMessage;
+                return false;
+            }
+            else if (!_validationService.NameValidation(Name, _groceryListService.GetAll()))
+            {
+                NameErrorMessage = _validationService.NameFailMessage;
+                return false;
+            }
+            return true;
+        }
 
         [RelayCommand]
         public void CreateGroceryList()
@@ -31,12 +46,23 @@ namespace Grocery.App.ViewModels
             int groceryListCount = _groceryListService.GetAll().Count();
             DateOnly currentDate = DateOnly.FromDateTime(DateTime.Today);
             Debug.WriteLine($"Het niet id is: {groceryListCount + 1}");
+            
+            if (ValidationCheck())
+            {
+                _validationService.ClearValidationCheckList();
+                NameErrorMessage = string.Empty;
+                GroceryList? newGroceryList = new(groceryListCount + 1, Name, currentDate, Color.ToHex(), _client.Id);
+                GroceryList? result = _groceryListService.Add(newGroceryList);
 
-            // TODO: Validatie checks toevoegen om foute/geen data te voorkomen
-            GroceryList newGroceryList = new(groceryListCount + 1, Name, currentDate, Color.ToHex(), _client.Id);
-            _groceryListService.Add(newGroceryList);
+                if (result == null)
+                {
+                    Shell.Current.DisplayAlert("Fout", "Het toevoegen van de boodschappenlijst is mislukt", "Ok");
+                    return;
+                }
 
-            Shell.Current.GoToAsync(nameof(GroceryListsView));
+                Shell.Current.DisplayAlert("Succes", "De boodschappenlijst is succesvol toegevoegd!", "Ok");
+                Shell.Current.GoToAsync(nameof(GroceryListsView));
+            }
         }
     }
 }

@@ -8,18 +8,18 @@
              Title="Boodschappenlijst aanmaken">
     <StackLayout VerticalOptions="Center" Margin="10">
         <Label Text="Boodschappenlijst aanmaken" FontAttributes="Bold" FontSize="24" HorizontalOptions="Center" />
-        <Entry Placeholder="Naam" Text="{Binding Name}" Margin="10" HorizontalTextAlignment="Center"/>
+        <Entry Placeholder="Naam" Text="{Binding Name}" Margin="10" HorizontalTextAlignment="Center" MaxLength="80"/>
         <Label Text="{Binding NameErrorMessage}" TextColor="Red" HorizontalOptions="Center"/>
+        <Label Text="Kleur boodschappenlijst" FontAttributes="Bold" HorizontalOptions="Center"/>
         <controls:ColorPicker 
             x:Name="ColorPicker"
             WidthRequest="200"
             HeightRequest="200"
             ColorFlowDirection="Horizontal"
-            ColorSpectrumStyle="ShadeToHueStyle"
+            ColorSpectrumStyle="ShadeToHueToTintStyle"
             PointerRingBorderUnits="0.3"
             PointerRingDiameterUnits="0.7"
             PickedColor="{Binding Color, Mode=TwoWay}"/>
-        <Label Text="{Binding ColorCodeErrorMessage}" TextColor="Red" HorizontalOptions="Center"/>
         <Button Text="Bevestiging" CornerRadius="10" Command="{Binding CreateGroceryListCommand}" Margin="10"/>
     </StackLayout>
 </ContentPage>

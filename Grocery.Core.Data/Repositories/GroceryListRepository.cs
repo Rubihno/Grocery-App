@@ -49,28 +49,44 @@ namespace Grocery.Core.Data.Repositories
             CloseConnection();
             return groceryLists;
         }
-        public GroceryList Add(GroceryList item)
+        public GroceryList? Add(GroceryList? item)
         {
-            int recordsAffected;
-            string insertQuery = $"INSERT INTO GroceryList(Name, Date, Color, ClientId) VALUES(@Name, @Date, @Color, @ClientId) Returning RowId;";
-            OpenConnection();
-            using (SqliteCommand command = new(insertQuery, Connection))
+            try
             {
-                command.Parameters.AddWithValue("Name", item.Name);
-                command.Parameters.AddWithValue("Date", item.Date);
-                command.Parameters.AddWithValue("Color", item.Color);
-                command.Parameters.AddWithValue("ClientId", item.ClientId);
+                int recordsAffected;
+                string insertQuery = $"INSERT INTO GroceryList(Name, Date, Color, ClientId) VALUES(@Name, @Date, @Color, @ClientId) Returning RowId;";
+                OpenConnection();
+                using (SqliteCommand command = new(insertQuery, Connection))
+                {
+                    command.Parameters.AddWithValue("Name", item.Name);
+                    command.Parameters.AddWithValue("Date", item.Date);
+                    command.Parameters.AddWithValue("Color", item.Color);
+                    command.Parameters.AddWithValue("ClientId", item.ClientId);
 
-                //recordsAffected = command.ExecuteNonQuery();
-                item.Id = Convert.ToInt32(command.ExecuteScalar());
+                    //recordsAffected = command.ExecuteNonQuery();
+                    item.Id = Convert.ToInt32(command.ExecuteScalar());
+                }
+                return item;
             }
-            CloseConnection();
-            return item;
+            catch (SqliteException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Sqlite error while adding GroceryList: {ex.Message}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Unexpected error while adding GroceryList: {ex.Message}");
+                return null;
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
 
         public GroceryList? Delete(GroceryList item)
         {
-            string deleteQuery = $"DELETE FROM GroceryList WHERE Id = {item.Id};";
+            string deleteQuery = $"DELETE FROM GroceryList WHERE Name = {item.Name};";
             OpenConnection();
             Connection.ExecuteNonQuery(deleteQuery);
             CloseConnection();
