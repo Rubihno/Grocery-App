@@ -86,7 +86,7 @@ namespace Grocery.Core.Data.Repositories
 
         public GroceryList? Delete(GroceryList item)
         {
-            string deleteQuery = $"DELETE FROM GroceryList WHERE Name = {item.Name};";
+            string deleteQuery = $"DELETE FROM GroceryList WHERE Id = {item.Id};";
             OpenConnection();
             Connection.ExecuteNonQuery(deleteQuery);
             CloseConnection();

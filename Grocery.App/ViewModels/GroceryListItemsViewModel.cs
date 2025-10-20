@@ -5,6 +5,7 @@ using Grocery.App.Views;
 using Grocery.Core.Interfaces.Services;
 using Grocery.Core.Models;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Text.Json;
 
 namespace Grocery.App.ViewModels
@@ -15,6 +16,7 @@ namespace Grocery.App.ViewModels
         private readonly IGroceryListItemsService _groceryListItemsService;
         private readonly IProductService _productService;
         private readonly IFileSaverService _fileSaverService;
+        private readonly IGroceryListService _groceryListService;
         
         public ObservableCollection<GroceryListItem> MyGroceryListItems { get; set; } = [];
         public ObservableCollection<Product> AvailableProducts { get; set; } = [];
@@ -24,11 +26,12 @@ namespace Grocery.App.ViewModels
         [ObservableProperty]
         string myMessage;
 
-        public GroceryListItemsViewModel(IGroceryListItemsService groceryListItemsService, IProductService productService, IFileSaverService fileSaverService)
+        public GroceryListItemsViewModel(IGroceryListItemsService groceryListItemsService, IProductService productService, IFileSaverService fileSaverService, IGroceryListService groceryListService)
         {
             _groceryListItemsService = groceryListItemsService;
             _productService = productService;
             _fileSaverService = fileSaverService;
+            _groceryListService = groceryListService;
             Load(groceryList.Id);
         }
 
@@ -141,5 +144,16 @@ namespace Grocery.App.ViewModels
             MyGroceryListItems[index] = item;
         }
 
+        [RelayCommand]
+        public async void DeleteGroceryList()
+        {
+            if (GroceryList == null) return;
+            List<GroceryListItem> groceryListItems = _groceryListItemsService.GetAllOnGroceryListId(GroceryList.Id);
+
+            _groceryListService.Delete(GroceryList);
+            groceryListItems.ForEach(item => _groceryListItemsService.Delete(item));
+
+            await Shell.Current.GoToAsync(nameof(GroceryListsView));
+        }
     }
 }
