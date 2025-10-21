@@ -43,6 +43,8 @@ namespace Grocery.App.ViewModels
             }
             else
             {
+                EmptyFieldsErrorMessage = _validationService.EmptyFieldMessage;
+
                 _validationService.NameValidation(Name, _productService.GetAll());
                 NameErrorMessage = _validationService.NameFailMessage;
 
@@ -52,7 +54,7 @@ namespace Grocery.App.ViewModels
                 _validationService.DateValidation(ShelfLife);
                 DateErrorMessage = _validationService.DateFailMessage;
 
-                bool result = _validationService.GetValidationCheckList().All(check => check);
+                bool result = _validationService.validationList.All(check => check);
 
                 return result;
             }

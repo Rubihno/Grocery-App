@@ -38,6 +38,32 @@ namespace Grocery.App.ViewModels
         [ObservableProperty]
         private string emptyFieldMessage;
 
+        private bool ValidationChecks(List<Client> clientList)
+        {
+            bool veldenLeeg = _validatieService.EmptyFieldValidation(EmailAddress, Name, Password, PasswordConfirmation);
+
+            if (veldenLeeg)
+            {
+                EmptyFieldMessage = _validatieService.EmptyFieldMessage;
+                return false;
+            }
+            else
+            {
+                EmptyFieldMessage = _validatieService.EmptyFieldMessage;
+
+                _validatieService.EmailValidation(EmailAddress);
+                EmailValidationMessage = _validatieService.EmailFailMessage;
+
+                _validatieService.NameValidation(Name, clientList);
+                NameValidationMessage = _validatieService.NameFailMessage;
+
+                _validatieService.PasswordValidation(Password, PasswordConfirmation);
+                PasswordValidationMessage = _validatieService.PasswordFailMessage;
+
+                return _validatieService.validationList.All(check => check);
+            }
+        }
+
         [RelayCommand]
         private async void Cancel()
         {
@@ -53,38 +79,15 @@ namespace Grocery.App.ViewModels
         {
             List<Client> clientList = _clientRepository.GetAll();
             int id = clientList.Count + 1;
-            bool[] validatieChecks = new bool[3];
 
-            bool veldenLeeg = _validatieService.EmptyFieldValidation(EmailAddress, Name, Password, PasswordConfirmation);
-
-            if (veldenLeeg)
+            if (ValidationChecks(clientList))
             {
-                EmptyFieldMessage = _validatieService.EmptyFieldMessage;
-            }
-            else
-            {
-                EmptyFieldMessage = _validatieService.EmptyFieldMessage;
+                
+                _clientService.AddNieuwAccountToClientList(id, Name, EmailAddress, Password);
 
-                bool emailResult = _validatieService.EmailValidation(EmailAddress);
-                EmailValidationMessage = _validatieService.EmailFailMessage;
+                await Application.Current.MainPage?.Navigation.PopModalAsync();
 
-                bool gebruikersnaamResult = _validatieService.NameValidation(Name, clientList);
-                NameValidationMessage = _validatieService.NameFailMessage;
-
-                bool wachtwoordResult = _validatieService.PasswordValidation(Password, PasswordConfirmation);
-                PasswordValidationMessage = _validatieService.PasswordFailMessage;
-
-                validatieChecks = [emailResult, gebruikersnaamResult, wachtwoordResult];
-
-                if (validatieChecks.All(check => check))
-                {
-                    
-                    _clientService.AddNieuwAccountToClientList(id, Name, EmailAddress, Password);
-
-                    Application.Current.MainPage?.Navigation.PopModalAsync();
-
-                    Application.Current.MainPage?.DisplayAlert("Account aangemaakt", "U kunt nu inloggen met uw account", "OK");
-                }
+                await Application.Current.MainPage?.DisplayAlert("Account aangemaakt", "U kunt nu inloggen met uw account", "OK");
             }
         }
     }
