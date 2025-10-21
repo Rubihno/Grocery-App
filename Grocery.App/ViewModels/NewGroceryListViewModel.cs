@@ -60,8 +60,8 @@ namespace Grocery.App.ViewModels
                     return;
                 }
 
-                await Shell.Current.DisplayAlert("Succes", "De boodschappenlijst is succesvol toegevoegd!", "Ok");
                 await Shell.Current.GoToAsync(nameof(GroceryListsView));
+                await Shell.Current.DisplayAlert("Succes", "De boodschappenlijst is succesvol toegevoegd!", "Ok");
             }
         }
     }

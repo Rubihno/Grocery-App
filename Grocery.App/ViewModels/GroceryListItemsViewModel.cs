@@ -26,12 +26,14 @@ namespace Grocery.App.ViewModels
         [ObservableProperty]
         string myMessage;
 
-        public GroceryListItemsViewModel(IGroceryListItemsService groceryListItemsService, IProductService productService, IFileSaverService fileSaverService, IGroceryListService groceryListService)
+        public GroceryListItemsViewModel(IGroceryListItemsService groceryListItemsService, IProductService productService, 
+                                         IFileSaverService fileSaverService, IGroceryListService groceryListService)
         {
             _groceryListItemsService = groceryListItemsService;
             _productService = productService;
             _fileSaverService = fileSaverService;
             _groceryListService = groceryListService;
+
             Load(groceryList.Id);
         }
 
@@ -150,10 +152,16 @@ namespace Grocery.App.ViewModels
             if (GroceryList == null) return;
             List<GroceryListItem> groceryListItems = _groceryListItemsService.GetAllOnGroceryListId(GroceryList.Id);
 
-            _groceryListService.Delete(GroceryList);
-            groceryListItems.ForEach(item => _groceryListItemsService.Delete(item));
+            bool answer = await Shell.Current.DisplayAlert("Weet je het zeker?", $"Weet je zeker dat je {GroceryList.Name} wil verwijderen?", "Ja", "Nee");
 
-            await Shell.Current.GoToAsync(nameof(GroceryListsView));
+            if (answer)
+            {
+                _groceryListService.Delete(GroceryList);
+                groceryListItems.ForEach(item => _groceryListItemsService.Delete(item));
+
+                await Shell.Current.GoToAsync(nameof(GroceryListsView));
+                await Shell.Current.DisplayAlert("Succes", "Boodschappenlijst is succesvol verwijderd!", "Ok");
+            }
         }
     }
 }
