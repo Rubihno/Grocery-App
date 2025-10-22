@@ -45,7 +45,6 @@ namespace Grocery.App.ViewModels
         {
             int groceryListCount = _groceryListService.GetAll().Count();
             DateOnly currentDate = DateOnly.FromDateTime(DateTime.Today);
-            Debug.WriteLine($"Het niet id is: {groceryListCount + 1}");
             
             if (ValidationCheck())
             {

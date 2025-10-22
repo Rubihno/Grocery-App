@@ -110,8 +110,8 @@ namespace Grocery.App.Tests
         [Test]
         public void ProductNameValidation_ShortProductName_ReturnFalse()
         {
-            string gebruikersnaam = "1";
-            bool productNameCheck = _validationService.NameValidation(gebruikersnaam, _mockProductService.Object.GetAll());
+            string name = "1";
+            bool productNameCheck = _validationService.NameValidation(name, _mockProductService.Object.GetAll());
 
             Assert.IsFalse(productNameCheck);
             Assert.AreEqual("Productnaam bevat minder dan 3 karakters!", _validationService.NameFailMessage);
@@ -157,7 +157,7 @@ namespace Grocery.App.Tests
             TestContext.WriteLine("Test success: invalid decimal count of more or less then 2 decimals detected");
         }
     }
-    
+
     public class ShelfLifeDateTests : BaseViewModelTestsUC19
     {
         [Test]

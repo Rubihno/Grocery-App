@@ -21,18 +21,20 @@ namespace Grocery.Core.Services
 
         public List<bool> validationList { get; set; } = [];
 
-        public void EmailValidation(string email)
+        public bool EmailValidation(string email)
         {
             try
             {
                 MailAddress mail = new MailAddress(email);
                 EmailFailMessage = string.Empty;
                 validationList.Add(true);
+                return true;
             }
             catch (Exception e)
             {
                 EmailFailMessage = "Geen geldig e-mailadres ingevuld!";
                 validationList.Add(false);
+                return false;
             }
         }
         public bool NameValidation(string name, List<Client> clientList)
@@ -86,7 +88,7 @@ namespace Grocery.Core.Services
         {
             if (name.Length < 3)
             {
-                NameFailMessage = "Lijstnaam bevat minder dan 3 karakters!";
+                NameFailMessage = "Lijst naam bevat minder dan 3 karakters!";
                 return false;
             }
 
@@ -94,7 +96,7 @@ namespace Grocery.Core.Services
             {
                 if (item.Name == name)
                 {
-                    NameFailMessage = "Lijstnaam bestaat al!";
+                    NameFailMessage = "Lijst naam bestaat al!";
                     return false;
                 }
             }
@@ -154,36 +156,41 @@ namespace Grocery.Core.Services
             return false;
         }
 
-        public void PriceValidation(decimal price)
+        public bool PriceValidation(decimal price)
         {
             if (!price.ToString().Contains(","))
             {
                 PriceFailMessage = $"Prijs fout ingevoerd, gebruik een komma, bijvoorbeeld: 2,99";
                 validationList.Add(false);
+                return false;
             }
             else if (price.Scale != 2)
             {
                 PriceFailMessage = "Prijs beschikt niet over 2 decimalen achter de komma";
                 validationList.Add(false);
+                return false;
             }
             else
             {
                 PriceFailMessage = string.Empty;
                 validationList.Add(true);
+                return true;
             }
         }
 
-        public void DateValidation(DateTime date)
+        public bool DateValidation(DateTime date)
         {
             if (date.Date <= DateTime.Today)
             {
                 DateFailMessage = "Ingevoerde datum is vandaag of verlopen!";
                 validationList.Add(false);
+                return false;
             }
             else
             {
                 DateFailMessage = string.Empty;
                 validationList.Add(true);
+                return true;
             }
         }
 
