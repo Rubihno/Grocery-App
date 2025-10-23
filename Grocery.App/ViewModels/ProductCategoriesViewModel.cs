@@ -108,7 +108,7 @@ namespace Grocery.App.ViewModels
         }
 
         [RelayCommand]
-        public void Search(string text)
+        public async void Search(string text)
         {
             Load(Category.Id);
 
@@ -122,7 +122,7 @@ namespace Grocery.App.ViewModels
             }
             else if (text != string.Empty && !matchFound)
             {
-                Shell.Current.DisplayAlert("Onbekend product", "Product staat niet in de lijst!", "OK");
+                await Shell.Current.DisplayAlert("Onbekend product", "Product staat niet in de lijst!", "OK");
             }
         }
     }

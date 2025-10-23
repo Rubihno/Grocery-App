@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 
 namespace Grocery.App.Tests
 {
-    public class BaseViewModelTestsUC19
+    public class BaseModelTestsUC19
     {
         public Mock<IProductService> _mockProductService;
         public ValidationService _validationService;
@@ -43,7 +43,7 @@ namespace Grocery.App.Tests
         }
     }
     [TestFixture]
-    public class CreateProductEmptyFieldsTests : BaseViewModelTestsUC19
+    public class CreateProductEmptyFieldsTests : BaseModelTestsUC19
     {
         [Test]
         public void CreateProductEmptyFields_NoEmptyFields_ReturnFalse()
@@ -77,7 +77,7 @@ namespace Grocery.App.Tests
     }
 
     [TestFixture]
-    public class ProductNameValidationTests : BaseViewModelTestsUC19
+    public class ProductNameValidationTests : BaseModelTestsUC19
     {
         [Test]
         public void ProductNameValidation_ValidProductName_ReturnTrue()
@@ -110,8 +110,8 @@ namespace Grocery.App.Tests
         [Test]
         public void ProductNameValidation_ShortProductName_ReturnFalse()
         {
-            string gebruikersnaam = "1";
-            bool productNameCheck = _validationService.NameValidation(gebruikersnaam, _mockProductService.Object.GetAll());
+            string name = "1";
+            bool productNameCheck = _validationService.NameValidation(name, _mockProductService.Object.GetAll());
 
             Assert.IsFalse(productNameCheck);
             Assert.AreEqual("Productnaam bevat minder dan 3 karakters!", _validationService.NameFailMessage);
@@ -121,7 +121,7 @@ namespace Grocery.App.Tests
         }
     }
 
-    public class PriceValidationTests() : BaseViewModelTestsUC19
+    public class PriceValidationTests() : BaseModelTestsUC19
     {
         [Test]
         public void PriceValidation_ValidFormat_ReturnTrue()
@@ -157,8 +157,8 @@ namespace Grocery.App.Tests
             TestContext.WriteLine("Test success: invalid decimal count of more or less then 2 decimals detected");
         }
     }
-    
-    public class ShelfLifeDateTests : BaseViewModelTestsUC19
+
+    public class ShelfLifeDateTests : BaseModelTestsUC19
     {
         [Test]
         public void ShelfLifeDateTests_ValidDate_ReturnTrue()

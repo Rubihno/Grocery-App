@@ -27,11 +27,13 @@ namespace Grocery.Core.Services
             {
                 MailAddress mail = new MailAddress(email);
                 EmailFailMessage = string.Empty;
+                validationList.Add(true);
                 return true;
             }
             catch (Exception e)
             {
                 EmailFailMessage = "Geen geldig e-mailadres ingevuld!";
+                validationList.Add(false);
                 return false;
             }
         }
@@ -40,6 +42,7 @@ namespace Grocery.Core.Services
             if (name.Length < 5)
             {
                 NameFailMessage = "Gebruikersnaam bevat minder dan 5 karakters!";
+                validationList.Add(false);
                 return false;
             }
 
@@ -48,11 +51,13 @@ namespace Grocery.Core.Services
                 if (client.Name == name)
                 {
                     NameFailMessage = "Gebruikersnaam bestaat al!";
+                    validationList.Add(false);
                     return false;
                 }
             }
 
             NameFailMessage = string.Empty;
+            validationList.Add(true);
             return true;
         }
 
@@ -79,6 +84,26 @@ namespace Grocery.Core.Services
             validationList.Add(true);
             return true;
         }
+        public bool NameValidation(string name, List<GroceryList> groceryLists)
+        {
+            if (name.Length < 3)
+            {
+                NameFailMessage = "Lijst naam bevat minder dan 3 karakters!";
+                return false;
+            }
+
+            foreach (GroceryList item in groceryLists)
+            {
+                if (item.Name == name)
+                {
+                    NameFailMessage = "Lijst naam bestaat al!";
+                    return false;
+                }
+            }
+
+            NameFailMessage = string.Empty;
+            return true;
+        }
 
         public bool PasswordValidation(string password, string passwordConfirmation)
         {
@@ -87,16 +112,19 @@ namespace Grocery.Core.Services
                 if (password.Length < 8)
                 {
                     PasswordFailMessage = "Wachtwoord bevat minder dan 8 karakters!";
+                    validationList.Add(false);
                     return false;
                 }
                 PasswordFailMessage = string.Empty;
+                validationList.Add(true);
                 return true;
             }
             PasswordFailMessage = "Wachtwoorden zijn niet hetzelfde!";
+            validationList.Add(false);
             return false;
         }
 
-        public virtual bool EmptyFieldValidation(string email, string name, string password, string passwordConfirmation)
+        public bool EmptyFieldValidation(string email, string name, string password, string passwordConfirmation)
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(name) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(passwordConfirmation))
             {
@@ -117,6 +145,16 @@ namespace Grocery.Core.Services
             EmptyFieldMessage = string.Empty;
             return false;
         }
+        public bool EmptyFieldValidation(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                EmptyFieldMessage = "Vul een naam voor de boodschappenlijst in!";
+                return true;
+            }
+            EmptyFieldMessage = string.Empty;
+            return false;
+        }
 
         public bool PriceValidation(decimal price)
         {
@@ -132,9 +170,12 @@ namespace Grocery.Core.Services
                 validationList.Add(false);
                 return false;
             }
-            PriceFailMessage = string.Empty;
-            validationList.Add(true);
-            return true;
+            else
+            {
+                PriceFailMessage = string.Empty;
+                validationList.Add(true);
+                return true;
+            }
         }
 
         public bool DateValidation(DateTime date)
@@ -145,14 +186,12 @@ namespace Grocery.Core.Services
                 validationList.Add(false);
                 return false;
             }
-            DateFailMessage = string.Empty;
-            validationList.Add(true);
-            return true;
-        }
-
-        public List<bool> GetValidationCheckList()
-        {
-            return validationList;
+            else
+            {
+                DateFailMessage = string.Empty;
+                validationList.Add(true);
+                return true;
+            }
         }
 
         public void ClearValidationCheckList()

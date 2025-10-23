@@ -13,6 +13,7 @@
     </Shell.TitleView>
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="{Binding _global.Client.Name}" Command="{Binding ShowBoughtProductsCommand}" />
+        <ToolbarItem Text="Boodschappenlijst aanmaken" Command="{Binding ShowNewGroceryListViewCommand}"/>
     </ContentPage.ToolbarItems>
 
     <Border Stroke="#C49B33"
