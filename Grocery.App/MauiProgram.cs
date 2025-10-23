@@ -6,6 +6,7 @@ using Grocery.Core.Interfaces.Services;
 using Grocery.Core.Interfaces.Repositories;
 using Grocery.Core.Data.Repositories;
 using CommunityToolkit.Maui;
+using SkiaSharp.Views.Maui.Controls.Hosting;
 
 namespace Grocery.App
 {
@@ -15,6 +16,7 @@ namespace Grocery.App
         {
             var builder = MauiApp.CreateBuilder();
             builder
+                .UseSkiaSharp()
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
@@ -56,6 +58,7 @@ namespace Grocery.App
             builder.Services.AddTransient<CategoriesView>().AddTransient<CategoriesViewModel>();
             builder.Services.AddTransient<ProductCategoriesView>().AddTransient<ProductCategoriesViewModel>();
             builder.Services.AddTransient<NewProductView>().AddTransient<NewProductViewModel>();
+            builder.Services.AddTransient<NewGroceryListView>().AddTransient<NewGroceryListViewModel>();
 
             return builder.Build();
         }

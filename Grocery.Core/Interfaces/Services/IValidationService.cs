@@ -21,12 +21,13 @@ namespace Grocery.Core.Interfaces.Services
         public bool EmailValidation(string email);
         public bool NameValidation(string name, List<Client> clientList);
         public bool NameValidation(string name, List<Product> productList);
+        public bool NameValidation(string name, List<GroceryList> groceryLists);
         public bool PasswordValidation(string password, string passwordConfirmation);
         public bool EmptyFieldValidation(string email, string name, string password, string passwordConfirmation);
         public bool EmptyFieldValidation(string name, int? stock, decimal? price);
+        public bool EmptyFieldValidation(string name);
         public bool PriceValidation(decimal price);
         public bool DateValidation(DateTime date);
-        public List<bool> GetValidationCheckList();
         public void ClearValidationCheckList();
     }
 }

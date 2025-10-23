@@ -28,93 +28,173 @@ namespace Grocery.Core.Data.Repositories
 
         public List<GroceryList> GetAll()
         {
-            groceryLists.Clear();
-            
-            string selectQuery = "SELECT Id, Name, date(Date), Color, ClientId FROM GroceryList";
-            OpenConnection();
-            using (SqliteCommand command = new(selectQuery, Connection))
+            try
             {
-                SqliteDataReader reader = command.ExecuteReader();
+                groceryLists.Clear();
 
-                while (reader.Read())
+                string selectQuery = "SELECT Id, Name, date(Date), Color, ClientId FROM GroceryList";
+                OpenConnection();
+                using (SqliteCommand command = new(selectQuery, Connection))
                 {
-                    int id = reader.GetInt32(0);
-                    string name = reader.GetString(1);
-                    DateOnly date = DateOnly.FromDateTime(reader.GetDateTime(2));
-                    string color = reader.GetString(3);
-                    int clientId = reader.GetInt32(4);
-                    groceryLists.Add(new(id, name, date, color, clientId));
-                }
-            }
-            CloseConnection();
-            return groceryLists;
-        }
-        public GroceryList Add(GroceryList item)
-        {
-            int recordsAffected;
-            string insertQuery = $"INSERT INTO GroceryList(Name, Date, Color, ClientId) VALUES(@Name, @Date, @Color, @ClientId) Returning RowId;";
-            OpenConnection();
-            using (SqliteCommand command = new(insertQuery, Connection))
-            {
-                command.Parameters.AddWithValue("Name", item.Name);
-                command.Parameters.AddWithValue("Date", item.Date);
-                command.Parameters.AddWithValue("Color", item.Color);
-                command.Parameters.AddWithValue("ClientId", item.ClientId);
+                    SqliteDataReader reader = command.ExecuteReader();
 
-                //recordsAffected = command.ExecuteNonQuery();
-                item.Id = Convert.ToInt32(command.ExecuteScalar());
+                    while (reader.Read())
+                    {
+                        int id = reader.GetInt32(0);
+                        string name = reader.GetString(1);
+                        DateOnly date = DateOnly.FromDateTime(reader.GetDateTime(2));
+                        string color = reader.GetString(3);
+                        int clientId = reader.GetInt32(4);
+                        groceryLists.Add(new(id, name, date, color, clientId));
+                    }
+                }
+                return groceryLists;
             }
-            CloseConnection();
-            return item;
+            catch (SqliteException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Sqlite error while getting all GroceryLists: {ex.Message}");
+                return new List<GroceryList>();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Unexpected error while getting all GroceryLists: {ex.Message}");
+                return new List<GroceryList>();
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
+        public GroceryList? Add(GroceryList? item)
+        {
+            try
+            {
+                int recordsAffected;
+                string insertQuery = $"INSERT INTO GroceryList(Name, Date, Color, ClientId) VALUES(@Name, @Date, @Color, @ClientId) Returning RowId;";
+                OpenConnection();
+                using (SqliteCommand command = new(insertQuery, Connection))
+                {
+                    command.Parameters.AddWithValue("Name", item.Name);
+                    command.Parameters.AddWithValue("Date", item.Date);
+                    command.Parameters.AddWithValue("Color", item.Color);
+                    command.Parameters.AddWithValue("ClientId", item.ClientId);
+
+                    //recordsAffected = command.ExecuteNonQuery();
+                    item.Id = Convert.ToInt32(command.ExecuteScalar());
+                }
+                return item;
+            }
+            catch (SqliteException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Sqlite error while adding GroceryList: {ex.Message}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Unexpected error while adding GroceryList: {ex.Message}");
+                return null;
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
 
         public GroceryList? Delete(GroceryList item)
         {
-            string deleteQuery = $"DELETE FROM GroceryList WHERE Id = {item.Id};";
-            OpenConnection();
-            Connection.ExecuteNonQuery(deleteQuery);
-            CloseConnection();
-            return item;
+            try
+            {
+                string deleteQuery = $"DELETE FROM GroceryList WHERE Id = {item.Id};";
+                OpenConnection();
+                Connection.ExecuteNonQuery(deleteQuery);
+                return item;
+            }
+            catch (SqliteException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Sqlite error while deleting GroceryList: {ex.Message}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Unexpected error while deleting GroceryList: {ex.Message}");
+                return null;
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
 
         public GroceryList? Get(int id)
         {
-            string selectQuery = $"SELECT Id, Name, date(Date), Color, ClientId FROM GroceryList WHERE Id = {id}";
-            GroceryList? gl = null;
-            OpenConnection();
-            using (SqliteCommand command = new(selectQuery, Connection))
+            try
             {
-                SqliteDataReader reader = command.ExecuteReader();
-
-                if (reader.Read())
+                string selectQuery = $"SELECT Id, Name, date(Date), Color, ClientId FROM GroceryList WHERE Id = {id}";
+                GroceryList? groceryList = null;
+                OpenConnection();
+                using (SqliteCommand command = new(selectQuery, Connection))
                 {
-                    int Id = reader.GetInt32(0);
-                    string name = reader.GetString(1);
-                    DateOnly date = DateOnly.FromDateTime(reader.GetDateTime(2));
-                    string color = reader.GetString(3);
-                    int clientId = reader.GetInt32(4);
-                    gl = (new(Id, name, date, color, clientId));
+                    SqliteDataReader reader = command.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        int Id = reader.GetInt32(0);
+                        string name = reader.GetString(1);
+                        DateOnly date = DateOnly.FromDateTime(reader.GetDateTime(2));
+                        string color = reader.GetString(3);
+                        int clientId = reader.GetInt32(4);
+                        groceryList = (new(Id, name, date, color, clientId));
+                    }
                 }
+                return groceryList;
             }
-            CloseConnection();
-            return gl;
+            catch (SqliteException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Sqlite error while getting GroceryList: {ex.Message}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Unexpected error while getting GroceryList: {ex.Message}");
+                return null;
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
 
         public GroceryList? Update(GroceryList item)
         {
-            int recordsAffected;
-            string updateQuery = $"UPDATE GroceryList SET Name = @Name, Date = @Date, Color = @Color  WHERE Id = {item.Id};";
-            OpenConnection();
-            using (SqliteCommand command = new(updateQuery, Connection))
+            try
             {
-                command.Parameters.AddWithValue("Name", item.Name);
-                command.Parameters.AddWithValue("Date", item.Date);
-                command.Parameters.AddWithValue("Color", item.Color);
+                int recordsAffected;
+                string updateQuery = $"UPDATE GroceryList SET Name = @Name, Date = @Date, Color = @Color  WHERE Id = {item.Id};";
+                OpenConnection();
+                using (SqliteCommand command = new(updateQuery, Connection))
+                {
+                    command.Parameters.AddWithValue("Name", item.Name);
+                    command.Parameters.AddWithValue("Date", item.Date);
+                    command.Parameters.AddWithValue("Color", item.Color);
 
-                recordsAffected = command.ExecuteNonQuery();
+                    recordsAffected = command.ExecuteNonQuery();
+                }
+                return item;
             }
-            CloseConnection();
-            return item;
+            catch (SqliteException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Sqlite error while updating GroceryList: {ex.Message}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Unexpected error while updating GroceryList: {ex.Message}");
+                return null;
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
     }
 }

@@ -43,12 +43,18 @@ namespace Grocery.App.ViewModels
         }
 
         [RelayCommand]
-        public void ShowBoughtProducts()
+        public async void ShowBoughtProducts()
         {
             if (_global.Client.currentRole == Role.Admin)
             {
-                Shell.Current.GoToAsync($"{nameof(BoughtProductsView)}");
+                await Shell.Current.GoToAsync($"{nameof(BoughtProductsView)}");
             }
+        }
+
+        [RelayCommand]
+        public async void ShowNewGroceryListView()
+        {
+            await Shell.Current.GoToAsync(nameof(NewGroceryListView));
         }
     }
 }
