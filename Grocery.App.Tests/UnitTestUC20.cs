@@ -7,7 +7,7 @@ using System.Globalization;
 
 namespace Grocery.App.Tests
 {
-    public class BaseViewModelTestsUC20
+    public class BaseModelTestsUC20
     {
         public Mock<IGroceryListService> _mockGroceryListService;
         public ValidationService _validationService;
@@ -39,7 +39,7 @@ namespace Grocery.App.Tests
     }
 
     [TestFixture]
-    public class CreateGroceryListEmptyFieldsTests : BaseViewModelTestsUC20
+    public class CreateGroceryListEmptyFieldsTests : BaseModelTestsUC20
     {
         [Test]
         public void CreateGroceryListEmptyFields_NoEmptyFields_ReturnFalse()
@@ -67,7 +67,7 @@ namespace Grocery.App.Tests
     }
 
     [TestFixture]
-    public class GroceryListNameValidationTests : BaseViewModelTestsUC20
+    public class GroceryListNameValidationTests : BaseModelTestsUC20
     {
         [Test]
         public void GroceryListNameValidation_ValidGroceryListName_ReturnTrue()
@@ -111,7 +111,7 @@ namespace Grocery.App.Tests
         }
     }
 
-    public class CreateGroceryList() : BaseViewModelTestsUC20
+    public class CreateGroceryList() : BaseModelTestsUC20
     {
         [Test]
         public void CreateGroceryList_NewGroceryListCreated_ReturnTrue()

@@ -32,6 +32,7 @@ namespace Grocery.App.ViewModels
             _validationService = validationService;
         }
 
+        // Dit voorkomt toevoegen van foutieve data aan de database
         public bool ValidationChecks()
         {
             bool emptyFieldsResult = _validationService.EmptyFieldValidation(Name, Stock, Price);

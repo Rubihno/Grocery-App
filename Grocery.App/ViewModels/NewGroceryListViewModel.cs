@@ -25,6 +25,7 @@ namespace Grocery.App.ViewModels
         [ObservableProperty]
         private string nameErrorMessage;
 
+        // Dit voorkomt toevoegen van foutieve data aan de database
         public bool ValidationCheck()
         {
             if (_validationService.EmptyFieldValidation(Name))
@@ -40,6 +41,19 @@ namespace Grocery.App.ViewModels
             return true;
         }
 
+        // Bij een error/fout laat deze method dit weten aan de client
+        public async void ShowDisplayAlert(GroceryList? result)
+        {
+            if (result == null)
+            {
+                await Shell.Current.DisplayAlert("Fout", "Het toevoegen van de boodschappenlijst is mislukt", "Ok");
+                return;
+            }
+
+            await Shell.Current.GoToAsync(nameof(GroceryListsView));
+            await Shell.Current.DisplayAlert("Succes", "De boodschappenlijst is succesvol toegevoegd!", "Ok");
+        }
+
         [RelayCommand]
         private async void CreateGroceryList()
         {
@@ -53,14 +67,7 @@ namespace Grocery.App.ViewModels
                 GroceryList? newGroceryList = new(groceryListCount + 1, Name, currentDate, Color.ToHex(), _client.Id);
                 GroceryList? result = _groceryListService.Add(newGroceryList);
 
-                if (result == null)
-                {
-                    await Shell.Current.DisplayAlert("Fout", "Het toevoegen van de boodschappenlijst is mislukt", "Ok");
-                    return;
-                }
-
-                await Shell.Current.GoToAsync(nameof(GroceryListsView));
-                await Shell.Current.DisplayAlert("Succes", "De boodschappenlijst is succesvol toegevoegd!", "Ok");
+                ShowDisplayAlert(result);
             }
         }
     }

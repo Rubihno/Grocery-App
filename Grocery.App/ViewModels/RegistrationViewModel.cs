@@ -8,12 +8,10 @@ namespace Grocery.App.ViewModels
 {
     public partial class RegistrationViewModel : BaseViewModel
     {
-        private readonly IClientRepository _clientRepository;
         private readonly IValidationService _validatieService;
         private readonly IClientService _clientService;
-        public RegistrationViewModel(IClientRepository clientRepository, IValidationService validatieService, IClientService clientService)
+        public RegistrationViewModel(IValidationService validatieService, IClientService clientService)
         {
-            _clientRepository = clientRepository;
             _validatieService = validatieService;
             _clientService = clientService;
         }
@@ -67,26 +65,23 @@ namespace Grocery.App.ViewModels
         [RelayCommand]
         private async void Cancel()
         {
-            bool annuleren = await Application.Current.MainPage?.DisplayAlert("Registratie annuleren?", string.Empty, "Ja", "Nee");
-            if (annuleren)
+            bool cancelRegistration = await Application.Current.MainPage?.DisplayAlert("Registratie annuleren?", string.Empty, "Ja", "Nee");
+            if (cancelRegistration)
             {
-                Application.Current.MainPage?.Navigation.PopModalAsync();
+                await Application.Current.MainPage?.Navigation.PopModalAsync();
             }
         }
 
         [RelayCommand]
         private async Task Registration()
         {
-            List<Client> clientList = _clientRepository.GetAll();
+            List<Client> clientList = _clientService.GetAll();
             int id = clientList.Count + 1;
 
             if (ValidationChecks(clientList))
-            {
-                
+            {             
                 _clientService.AddNieuwAccountToClientList(id, Name, EmailAddress, Password);
-
                 await Application.Current.MainPage?.Navigation.PopModalAsync();
-
                 await Application.Current.MainPage?.DisplayAlert("Account aangemaakt", "U kunt nu inloggen met uw account", "OK");
             }
         }

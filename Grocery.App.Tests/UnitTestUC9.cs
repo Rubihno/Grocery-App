@@ -9,7 +9,7 @@ using Grocery.Core.Interfaces.Services;
 
 namespace Grocery.App.Tests
 {
-    public class BaseViewModelTests
+    public class BaseModelTests
     {
         public Mock<IClientRepository> _mockClientRepository = new();
         public Mock<IClientService> _mockClientService;
@@ -32,52 +32,52 @@ namespace Grocery.App.Tests
 
             _mockClientRepository.Setup(x => x.GetAll()).Returns(mockClientList);
             _mockClientService.Setup(x => x.AddNieuwAccountToClientList(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                  .Callback<int, string, string, string>((id, gebruikersnaam, email, wachtwoord) =>
+                  .Callback<int, string, string, string>((id, username, email, wachtwoord) =>
                   {
-                      var hashWachtwoord = PasswordHelper.HashPassword(wachtwoord);
-                      var newClient = new Client(id, gebruikersnaam, email, hashWachtwoord);
+                      var hashPassword = PasswordHelper.HashPassword(wachtwoord);
+                      var newClient = new Client(id, username, email, hashPassword);
                       mockClientList.Add(newClient);
                   });
         }
     }
 
     [TestFixture]
-    public class LegeVeldenTests : BaseViewModelTests
+    public class EmptyFieldsTests : BaseModelTests
     {
         [Test]
-        public void RegistratieLegeVelden_GeenLegeVelden_ReturnFalse()
+        public void RegistrationEmptyFields_NoEmptyFields_ReturnFalse()
         {
             string email = "ruben@mail.com";
             string gebruikersnaam = "Ruben";
             string wachtwoord = "wachtwoord123";
             string wachtwoordBevestiging = "wachtwoord123";
 
-            bool legeVeldenCheck = _validatieService.EmptyFieldValidation(email, gebruikersnaam, wachtwoord, wachtwoordBevestiging); ;
+            bool emptyFieldsCheck = _validatieService.EmptyFieldValidation(email, gebruikersnaam, wachtwoord, wachtwoordBevestiging); ;
 
-            Assert.IsFalse(legeVeldenCheck);
+            Assert.IsFalse(emptyFieldsCheck);
             Assert.AreEqual(string.Empty, _validatieService.EmptyFieldMessage);
         }
 
         [TestCase ("", "Ruben", "wachtwoord123", "wachtwoord123")]
         [TestCase("", "", "", "")]
-        public void RegistratieLegeVelden_LegeVeldenMessage_ReturnTrue(string email, string gebruikersnaam, string wachtwoord, string wachtwoordBevestiging)
+        public void RegistrationEmptyFields_EmptyFields_ReturnTrue(string email, string gebruikersnaam, string wachtwoord, string wachtwoordBevestiging)
         {
-            bool legeVeldenCheck = _validatieService.EmptyFieldValidation(email, gebruikersnaam, wachtwoord, wachtwoordBevestiging);
+            bool emptyFieldsCheck = _validatieService.EmptyFieldValidation(email, gebruikersnaam, wachtwoord, wachtwoordBevestiging);
 
-            Assert.IsTrue(legeVeldenCheck);
+            Assert.IsTrue(emptyFieldsCheck);
             Assert.AreEqual("1 of meerdere velden zijn leeg!", _validatieService.EmptyFieldMessage);
         }
     }
 
     [TestFixture]
-    public class EmailadresValidatieTests : BaseViewModelTests
+    public class EmailValidationTests : BaseModelTests
     {
         [Test]
-        public void EmailAdresValidatie_GeldigeEmail_ReturnTrue()
+        public void EmailValidation_ValidEmail_ReturnTrue()
         {
-            string geldigEmail = "user@mail.com";
+            string validEmail = "user@mail.com";
 
-            bool emailCheck = _validatieService.EmailValidation(geldigEmail);
+            bool emailCheck = _validatieService.EmailValidation(validEmail);
 
             Assert.IsTrue(emailCheck);
             Assert.IsEmpty(_validatieService.EmailFailMessage);
@@ -87,7 +87,7 @@ namespace Grocery.App.Tests
         [TestCase("usermail.com")]
         [TestCase("@mail.com")]
         [TestCase("")]
-        public void EmailAdresValidatie_OngeldigeEmails_ReturnFalse(string email)
+        public void EmailValidation_InvalidEmail_ReturnFalse(string email)
         {
             bool emailCheck = _validatieService.EmailValidation(email);
 
@@ -97,41 +97,41 @@ namespace Grocery.App.Tests
     }
 
     [TestFixture]
-    public class GebruikersValidatieTests : BaseViewModelTests 
+    public class UsernameValidationTests : BaseModelTests 
     {
         [Test]
-        public void GebruikersnaamValidatie_GeldigeGebruikersnaam_ReturnTrue()
+        public void UsernameValidation_ValidUsername_ReturnTrue()
         {
 
-            string gebruikersnaam = "Gebruiker01";
+            string username = "Gebruiker01";
 
-            bool gebruikersnaamCheck = _validatieService.NameValidation(gebruikersnaam, _mockClientRepository.Object.GetAll());
+            bool usernameCheck = _validatieService.NameValidation(username, _mockClientRepository.Object.GetAll());
 
-            Assert.IsTrue(gebruikersnaamCheck);
+            Assert.IsTrue(usernameCheck);
             Assert.IsEmpty(_validatieService.NameFailMessage);
 
             _mockClientRepository.Verify(x => x.GetAll(), Times.Once);
         }
 
         [Test]
-        public void GebruikersnaamValidatie_BestaandeGebruikersnaam_ReturnFalse()
+        public void UsernameValidation_ExistingUsername_ReturnFalse()
         {
-            string gebruikersnaam = "A.J. Kwak";
-            bool gebruikersnaamCheck = _validatieService.NameValidation(gebruikersnaam, _mockClientRepository.Object.GetAll());
+            string username = "A.J. Kwak";
+            bool usernameCheck = _validatieService.NameValidation(username, _mockClientRepository.Object.GetAll());
 
-            Assert.IsFalse(gebruikersnaamCheck);
+            Assert.IsFalse(usernameCheck);
             Assert.AreEqual("Gebruikersnaam bestaat al!", _validatieService.NameFailMessage);
 
             _mockClientRepository.Verify(x => x.GetAll(), Times.Once);
         }
 
         [Test]
-        public void GebruikersnaamValidatie_TeKorteGebruikersnaam_ReturnFalse()
+        public void UsernameValidation_UsernameTooShort_ReturnFalse()
         {
-            string gebruikersnaam = "1";
-            bool gebruikersnaamCheck = _validatieService.NameValidation(gebruikersnaam, _mockClientRepository.Object.GetAll());
+            string username = "1";
+            bool usernameCheck = _validatieService.NameValidation(username, _mockClientRepository.Object.GetAll());
 
-            Assert.IsFalse(gebruikersnaamCheck);
+            Assert.IsFalse(usernameCheck);
             Assert.AreEqual("Gebruikersnaam bevat minder dan 5 karakters!", _validatieService.NameFailMessage);
 
             _mockClientRepository.Verify(x => x.GetAll(), Times.Once);
@@ -139,61 +139,61 @@ namespace Grocery.App.Tests
     }
 
     [TestFixture]
-    public class WachtwoordValidatieTests : BaseViewModelTests
+    public class WachtwoordValidatieTests : BaseModelTests
     {
         [Test]
-        public void WachtwoordValidatie_WachtwoordenZijnGelijk_ReturnTrue()
+        public void PasswordValidation_PasswordsAreEqual_ReturnTrue()
         {
-            string wachtwoord = "wachtwoord123";
-            string wachtwoordBevestiging = "wachtwoord123";
+            string password = "wachtwoord123";
+            string passwordConfirmation = "wachtwoord123";
 
-            bool wachtwoordCheck = _validatieService.PasswordValidation(wachtwoord, wachtwoordBevestiging);
+            bool passwordCheck = _validatieService.PasswordValidation(password, passwordConfirmation);
 
-            Assert.IsTrue(wachtwoordCheck);
+            Assert.IsTrue(passwordCheck);
             Assert.IsEmpty(_validatieService.PasswordFailMessage);
         }
 
         [Test]
-        public void WachtwoordValidatie_WachtwoordenZijnNietGelijk_ReturnFalse()
+        public void PasswordValidation_PasswordsAreNotEqual_ReturnFalse()
         {
-            string wachtwoord = "wachtwoord123";
-            string wachtwoordBevestiging = "wachtwoord321";
+            string password = "wachtwoord123";
+            string passwordConfirmation = "wachtwoord321";
 
-            bool wachtwoordCheck = _validatieService.PasswordValidation(wachtwoord, wachtwoordBevestiging);
+            bool passwordCheck = _validatieService.PasswordValidation(password, passwordConfirmation);
 
-            Assert.IsFalse(wachtwoordCheck);
+            Assert.IsFalse(passwordCheck);
             Assert.AreEqual("Wachtwoorden zijn niet hetzelfde!", _validatieService.PasswordFailMessage);
         }
 
         [Test]
-        public void WachtwoordValidatie_WachtwoordenZijnTeKort_ReturnFalse()
+        public void PasswordValidation_PasswordsTooShort_ReturnFalse()
         {
-            string wachtwoord = "ww123";
-            string wachtwoordBevestiging = "ww123";
+            string password = "ww123";
+            string passwordConfirmation = "ww123";
 
-            bool wachtwoordCheck = _validatieService.PasswordValidation(wachtwoord, wachtwoordBevestiging);
+            bool passwordCheck = _validatieService.PasswordValidation(password, passwordConfirmation);
 
-            Assert.IsFalse(wachtwoordCheck);
+            Assert.IsFalse(passwordCheck);
             Assert.AreEqual("Wachtwoord bevat minder dan 8 karakters!", _validatieService.PasswordFailMessage);
         }
     }
 
     [TestFixture]
-    public class HashPasswordTest : BaseViewModelTests
+    public class HashPasswordTest : BaseModelTests
     {
         [Test]
-        public void HashPassword_PasswordIsGehasht_IsTrue()
+        public void HashPassword_PasswordIsHashed_IsTrue()
         {
             int id = mockClientList.Count + 1;
             string email = "gebruiker@mail.com";
-            string gebruikersnaam = "user123";
-            string wachtwoord = "gebruiker123";
+            string username = "user123";
+            string password = "gebruiker123";
 
-            _mockClientService.Object.AddNieuwAccountToClientList(id, email, gebruikersnaam, wachtwoord);       
+            _mockClientService.Object.AddNieuwAccountToClientList(id, email, username, password);       
 
             Client addedClient = mockClientList.FirstOrDefault(c => c.Id == id);
 
-            Assert.IsTrue(PasswordHelper.VerifyPassword(wachtwoord, addedClient.Password));
+            Assert.IsTrue(PasswordHelper.VerifyPassword(password, addedClient.Password));
         }
     }
 }

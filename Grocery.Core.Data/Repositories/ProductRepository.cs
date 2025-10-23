@@ -25,53 +25,85 @@ namespace Grocery.Core.Data.Repositories
         }
         public List<Product> GetAll()
         {
-            products.Clear();
-
-            string selectQuery = "SELECT * FROM Products";
-            OpenConnection();
-
-            using (SqliteCommand command = new(selectQuery, Connection))
+            try
             {
-                SqliteDataReader reader = command.ExecuteReader();
+                products.Clear();
 
-                while (reader.Read())
+                string selectQuery = "SELECT * FROM Products";
+                OpenConnection();
+
+                using (SqliteCommand command = new(selectQuery, Connection))
                 {
-                    int id = reader.GetInt32(0);
-                    string name = reader.GetString(1);
-                    int stock = reader.GetInt32(2);
-                    decimal price = reader.GetDecimal(3);
-                    DateOnly date = DateOnly.FromDateTime(reader.GetDateTime(4));
+                    SqliteDataReader reader = command.ExecuteReader();
 
-                    products.Add(new(id, name, stock, price, date));
+                    while (reader.Read())
+                    {
+                        int id = reader.GetInt32(0);
+                        string name = reader.GetString(1);
+                        int stock = reader.GetInt32(2);
+                        decimal price = reader.GetDecimal(3);
+                        DateOnly date = DateOnly.FromDateTime(reader.GetDateTime(4));
+
+                        products.Add(new(id, name, stock, price, date));
+                    }
+                    return products;
                 }
+            }
+            catch (SqliteException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Sqlite error while getting all products: {ex.Message}");
+                return new List<Product>();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Unexpected error while getting all products: {ex.Message}");
+                return new List<Product>();
+            }
+            finally
+            {
                 CloseConnection();
-                return products;
             }
         }
 
         public Product? Get(int? productId)
         {
-            string selectQuery = $"SELECT Id, Name, Stock, Price, date(Date) FROM Products WHERE Id = {productId.Value}";
-            Product? p = null;
-            OpenConnection();
-
-            using (SqliteCommand command = new(selectQuery, Connection))
+            try
             {
-                SqliteDataReader reader = command.ExecuteReader();
+                string selectQuery = $"SELECT Id, Name, Stock, Price, date(Date) FROM Products WHERE Id = {productId.Value}";
+                Product? p = null;
+                OpenConnection();
 
-                while (reader.Read())
+                using (SqliteCommand command = new(selectQuery, Connection))
                 {
-                    int id = reader.GetInt32(0);
-                    string name = reader.GetString(1);
-                    int stock = reader.GetInt32(2);
-                    decimal price = reader.GetDecimal(3);
-                    DateOnly date = DateOnly.FromDateTime(reader.GetDateTime(4));
+                    SqliteDataReader reader = command.ExecuteReader();
 
-                    p = new(id, name, stock, price, date);
+                    while (reader.Read())
+                    {
+                        int id = reader.GetInt32(0);
+                        string name = reader.GetString(1);
+                        int stock = reader.GetInt32(2);
+                        decimal price = reader.GetDecimal(3);
+                        DateOnly date = DateOnly.FromDateTime(reader.GetDateTime(4));
+
+                        p = new(id, name, stock, price, date);
+                    }
                 }
+                return p;
             }
-            CloseConnection();
-            return p;
+            catch (SqliteException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Sqlite error while getting product: {ex.Message}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Unexpected error while getting product: {ex.Message}");
+                return null;
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
 
         public Product? Add(Product? item)
@@ -112,31 +144,62 @@ namespace Grocery.Core.Data.Repositories
 
         public Product? Delete(Product item)
         {
-            string deleteQuery = $"DELETE FROM Products WHERE Id = {item.Id}";
-            OpenConnection();
-            Connection.ExecuteNonQuery(deleteQuery);
-            CloseConnection();
-            return item;
+            try
+            {
+                string deleteQuery = $"DELETE FROM Products WHERE Id = {item.Id}";
+                OpenConnection();
+                Connection.ExecuteNonQuery(deleteQuery);
+                return item;
+            }
+            catch (SqliteException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Sqlite error while deleting product: {ex.Message}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Unexpected error while deleting product: {ex.Message}");
+                return null;
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
 
         public Product? Update(Product item)
         {
-            int recordsAffected;
-            string updateQuery = $"UPDATE Products SET Name = @Name, Stock = @Stock, Price = @Price, Date = @Date WHERE Id = {item.Id}";
-            OpenConnection();
-
-            using (SqliteCommand command = new(updateQuery, Connection))
+            try
             {
-                command.Parameters.AddWithValue("Name", item.Name);
-                command.Parameters.AddWithValue("Stock", item.Stock);
-                command.Parameters.AddWithValue("Price", item.Price);
-                command.Parameters.AddWithValue("Date", item.ShelfLife);
+                int recordsAffected;
+                string updateQuery = $"UPDATE Products SET Name = @Name, Stock = @Stock, Price = @Price, Date = @Date WHERE Id = {item.Id}";
+                OpenConnection();
 
-                recordsAffected = command.ExecuteNonQuery();
+                using (SqliteCommand command = new(updateQuery, Connection))
+                {
+                    command.Parameters.AddWithValue("Name", item.Name);
+                    command.Parameters.AddWithValue("Stock", item.Stock);
+                    command.Parameters.AddWithValue("Price", item.Price);
+                    command.Parameters.AddWithValue("Date", item.ShelfLife);
+
+                    recordsAffected = command.ExecuteNonQuery();
+                }
+                return item;
             }
-
-            CloseConnection();
-            return item;
+            catch (SqliteException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Sqlite error while updating product: {ex.Message}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Unexpected error while updating product: {ex.Message}");
+                return null;
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
     }
 }
